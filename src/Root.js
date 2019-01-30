@@ -6,7 +6,7 @@ import Home from './view/home/Home'
 
 class Root extends Component {
   renderChild(route) {
-    console.log(route.name)
+    // console.log(route.name)
     if (route.name === 'home') {
       return <Home />
     } else if (route.name === 'read') {

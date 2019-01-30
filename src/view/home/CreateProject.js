@@ -1,5 +1,9 @@
 import React from 'react'
 
+const electron = window.require('electron')
+const remote = electron.remote
+const mainProcess = remote.require('./main.js')
+
 class CreateProject extends React.Component {
   constructor(props) {
     super(props)
@@ -21,16 +25,8 @@ class CreateProject extends React.Component {
   onNameSubmit() {
     console.log(this.state.projectName)
     const { projectName } = this.state
-    fetch('http://localhost:3003/create', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        name: projectName
-      })
-    })
+    // console.log(mainProcess.getFileTree())
+    console.log(mainProcess.getFileFromUser(projectName))
   }
 
   render() {
