@@ -22,9 +22,23 @@ exports.getFileFromUser = (fileName) => {
   return code
 }
 
+exports.getDirectoryPath = (projectName) => {
+  const directory = dialog.showOpenDialog(mainWindow, {
+    properties: ['openDirectory']
+  })
+  // console.log(projectName)
+  this.createProject(directory[0], projectName)
+}
+
+exports.createProject = (path, name) => {
+  // console.log(path, name)
+  execSync(`cd ${path} && npx create-react-app ${name}`, { encoding: 'utf-8' })
+  execSync(`cd ${path}/${name} && npm install --save-dev yo @tanawat/generator-redux-plus`, { encoding: 'utf-8' })
+}
+
 function createWindow() {
-  mainWindow = new BrowserWindow({ 
-    width: 800, 
+  mainWindow = new BrowserWindow({
+    width: 800,
     height: 600
   })
 

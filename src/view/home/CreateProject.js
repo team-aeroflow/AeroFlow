@@ -23,16 +23,18 @@ class CreateProject extends React.Component {
   }
 
   onNameSubmit() {
-    console.log(this.state.projectName)
+    // console.log(this.state.projectName)
     const { projectName } = this.state
     // console.log(mainProcess.getFileTree())
-    console.log(mainProcess.getFileFromUser(projectName))
+    // console.log(mainProcess.getFileFromUser(projectName))
+    mainProcess.getDirectoryPath(projectName)
   }
 
   render() {
     return (
       <div style={{backgroundColor: 'white', color: 'black'}}>
         <h2>Project Name</h2>
+        {/* {console.log(mainProcess.getFileTree())} */}
         <input onChange={this.onNameChange.bind(this)}></input>
         <button onClick={this.onNameSubmit.bind(this)}>Create</button>
       </div>
