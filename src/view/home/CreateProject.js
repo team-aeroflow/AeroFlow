@@ -26,7 +26,6 @@ class CreateProject extends React.Component {
   onNameSubmit() {
     const { projectName } = this.state
     mainProcess.createProject(projectName)
-    
   }
 
   render() {
