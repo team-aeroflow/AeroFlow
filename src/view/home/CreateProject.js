@@ -2,6 +2,7 @@ import React from 'react'
 
 const electron = window.require('electron')
 const remote = electron.remote
+// const ipcRenderer = electron.ipcRenderer
 const mainProcess = remote.require('./main.js')
 
 class CreateProject extends React.Component {
@@ -23,16 +24,14 @@ class CreateProject extends React.Component {
   }
 
   onNameSubmit() {
-    // console.log(this.state.projectName)
     const { projectName } = this.state
-    // console.log(mainProcess.getFileTree())
-    // console.log(mainProcess.getFileFromUser(projectName))
-    mainProcess.getDirectoryPath(projectName)
+    mainProcess.createProject(projectName)
+    
   }
 
   render() {
     return (
-      <div style={{backgroundColor: 'white', color: 'black'}}>
+      <div style={{ backgroundColor: 'white', color: 'black' }}>
         <h2>Project Name</h2>
         {/* {console.log(mainProcess.getFileTree())} */}
         <input onChange={this.onNameChange.bind(this)}></input>

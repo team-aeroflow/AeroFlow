@@ -15,14 +15,16 @@ class Home extends React.Component {
   }
 
   onNewProjectClick() {
-    // mainProcess.getDirectoryPath()
     this.setState(prevState => {
       return {
         ...prevState,
         showDialog: !this.state.showDialog
       }
     })
+  }
 
+  onOpenExistProjectClick() {
+    mainProcess.openExistingProject()
   }
 
   render() {
@@ -32,7 +34,7 @@ class Home extends React.Component {
         <button onClick={this.onNewProjectClick.bind(this)}>New Project</button>
         {showDialog ? <CreateProject /> : null}
         <div>__________</div>
-        <button>Open Existing...</button>
+        <button onClick={this.onOpenExistProjectClick.bind(this)}>Open Existing...</button>
       </div>
     )
   }
