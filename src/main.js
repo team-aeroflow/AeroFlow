@@ -33,34 +33,16 @@ exports.getDirectoryPath = () => {
 exports.createProject = (name) => {
   const path = this.getDirectoryPath()
   const process = fork(`${__dirname}/worker.js`)
-  // send list of e-mails to forked process
+  // send to forked process
   process.send({
     path,
     name
   })
   // listen for messages from forked process
   process.on('message', (message) => {
-    console.log(message)
+    console.log('message from fork', message)
   })
-
-  // let serverProc = require('child_process').fork(
-  //   require.resolve('./worker.js'),
-  //   ['--key', 'value'], // pass to process.argv into child
-  //   {
-  //     // options
-  //   }
-  // )
-  // serverProc.on('exit', (code, sig) => {
-  //   // finishing
-  // })
-  // serverProc.on('error', (error) => {
-  //   // error handling
-  // })
-  // execSync(`cd ${path} && npx create-react-app ${name}`, { encoding: 'utf-8' })
-  // execSync(`cd ${path}/${name} && npm install --save-dev yo @tanawat/generator-redux-plus`, { encoding: 'utf-8' })
 }
-
-
 
 exports.openExistingProject = () => {
   const path = this.getDirectoryPath()
@@ -77,25 +59,6 @@ function createWindow() {
   })
 
   mainWindow.loadURL('http://localhost:3000')
-  // const n = cp.fork(`${__dirname}/worker.js`);
-
-  // n.on('message', (m) => {
-  //   console.log('PARENT got message:', m);
-  // });
-  // n.send({ hello: 'world' });
-  // mainWindow.loadURL(url.format({
-  //   pathname: path.resolve(__dirname, '../build/index.html'),
-  //   protocol: 'file:',
-  //   slashes: true
-  // }))
-  // fork another process
-  // const process = fork(path.resolve(__dirname, './worker.js'))
-  // // send list of e-mails to forked process
-  // process.send({ mails: 'peerasorn' });
-  // // listen for messages from forked process
-  // process.on('message', (message) => {
-  //   console.log(`Number of mails sent ${message}`);
-  // });
 
   mainWindow.webContents.openDevTools()
 

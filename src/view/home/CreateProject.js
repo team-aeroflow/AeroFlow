@@ -25,10 +25,15 @@ class CreateProject extends React.Component {
 
   onNameSubmit() {
     const { projectName } = this.state
-    mainProcess.createProject(projectName)
+    const isCreate = mainProcess.createProject(projectName)
+    console.log('creating ... ')
+    console.log(isCreate ? 'create success' : 'error')
+    // TODO: set Loading
+    // TODO: route page after loading success
   }
 
   render() {
+    // TODO: pop modal block and set gray background
     return (
       <div style={{ backgroundColor: 'white', color: 'black' }}>
         <h2>Project Name</h2>

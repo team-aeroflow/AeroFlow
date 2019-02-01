@@ -14,7 +14,7 @@ class Home extends React.Component {
     }
   }
 
-  onNewProjectClick() {
+  isOpenNewProject() {
     this.setState(prevState => {
       return {
         ...prevState,
@@ -31,7 +31,7 @@ class Home extends React.Component {
     const { showDialog } = this.state
     return (
       <div>
-        <button onClick={this.onNewProjectClick.bind(this)}>New Project</button>
+        <button onClick={this.isOpenNewProject.bind(this)}>New Project</button>
         {showDialog ? <CreateProject /> : null}
         <div>__________</div>
         <button onClick={this.onOpenExistProjectClick.bind(this)}>Open Existing...</button>
