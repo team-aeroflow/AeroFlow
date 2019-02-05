@@ -6,7 +6,7 @@ const ipcRenderer = electron.ipcRenderer
 
 class Dashboard extends React.Component {
   componentDidMount() {
-    ipcRenderer.once('open-project-reply', (event, arg) => {
+    ipcRenderer.on('dashboard', (event, arg) => {
       console.log(arg.meta)
       console.log(arg.tree)
     })

@@ -28,13 +28,16 @@ class Home extends React.Component {
   }
 
   onOpenExistProjectClick() {
-    // mainProcess.openExistingProject()
-    // ipcRenderer.once('open-project-reply', (event, arg) => {
-    //   console.log(arg.meta)
-    //   console.log(arg.tree)
-    // })
     ipcRenderer.send('open-project', 'open project')
-    router.navigate('read')
+    ipcRenderer.on('open-project-reply', (event, arg) => {
+      const { success } = arg
+      // console.log(arg)
+      if (!success) {
+        console.log('No such file or directory')
+        return;
+      } 
+      router.navigate('dashboard')
+    })
   }
 
   render() {

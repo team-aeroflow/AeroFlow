@@ -10,7 +10,7 @@ class Root extends Component {
     // console.log(route.name)
     if (route.name === 'home') {
       return <Home />
-    } else if (route.name === 'read') {
+    } else if (route.name === 'dashboard') {
       return <Dashboard />
     }
   }

@@ -3,7 +3,7 @@ import browserPlugin from 'router5/plugins/browser'
 
 const routes = [
   { name: 'home', path: '/' },
-  { name: 'read', path: '/read' }
+  { name: 'dashboard', path: '/dashboard' }
 ]
 
 const options = {
