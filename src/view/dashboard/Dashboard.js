@@ -8,28 +8,37 @@ class Dashboard extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      button: []
+      button: [],
+      path: '',
+      code: ''
     }
   }
+
   componentDidMount() {
+    // ต้องใช้ path เดิมหลังจากที่ open project มาแล้ว ดังนั้นแล้วเราจะนำ path นั้นไปเก็บอย่างไรดี
     ipcRenderer.on('dashboard', (event, arg) => {
-      console.log(arg)
-      console.log(arg.meta)
-      console.log(arg.tree)
-      console.log(arg.tree.split('\n'))
+      console.log(arg.path)
       this.setState(prevState => {
         return {
           ...prevState,
+          path: arg.path,
           button: arg.tree.split('\n').slice(0, -1)
         }
       })
     })
+  }
 
+  onCodeClick(source) {
+    const { path } = this.state
+    ipcRenderer.send('read-file', `${path}/${source}`)
+    ipcRenderer.on('read-file-response', (event, arg) => {
+      console.log(arg)
+    })
   }
 
   render() {
     console.log(this.state.button)
-    const { button } = this.state
+    const { button, code } = this.state
     return (
       <div>
         DASHBOARD
@@ -37,11 +46,13 @@ class Dashboard extends React.Component {
           button.map((data, i) => {
             return (
               <div key={`${data}_${i}`}>
-                <button key={data}>{data}</button>
+                <button key={data} onClick={this.onCodeClick.bind(this, data)}>{data}</button>
               </div>
             )
           })
         }
+        <textarea disabled={true} value={code} style={{ fontSize: '11pt' }}></textarea>
+
       </div>
     )
   }

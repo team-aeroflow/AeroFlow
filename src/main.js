@@ -49,13 +49,19 @@ exports.readFileFromUser = (_path, fileName) => {
   return code
 }
 
+ipcMain.on('read-file', (event, arg) => {
+  console.log(arg)
+  console.log(this.readFileFromUser(arg, ''))
+  event.sender.send('read-file-response', this.readFileFromUser(arg, ''))
+})
+
 ipcMain.on('open-project', (event, arg) => {
   const getPath = this.getDirectoryPath()
   const tree = this.getFileList(getPath)
   const metaPath = `${getPath}/src/state/__state__/`
   if (tree === undefined || !fs.existsSync(metaPath)) {
     console.log('No such file or directory')
-    event.sender.send('open-project-reply', { 
+    event.sender.send('open-project-reply', {
       success: false
     })
     return;
@@ -64,13 +70,14 @@ ipcMain.on('open-project', (event, arg) => {
 
   console.log(arg) // prints "open project" 
 
-  event.sender.send('open-project-reply', { 
+  event.sender.send('open-project-reply', {
     success: true
-   })
-   event.sender.send('dashboard', { 
-    tree, 
-    meta
-   })
+  })
+  event.sender.send('dashboard', {
+    tree,
+    meta,
+    path: getPath
+  })
 })
 
 
