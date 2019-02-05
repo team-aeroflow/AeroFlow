@@ -1,10 +1,14 @@
 import React from 'react'
 import './Home.css'
 import CreateProject from './CreateProject'
+import { router } from '../../router'
 
 const electron = window.require('electron')
 const remote = electron.remote
 const mainProcess = remote.require('./main.js')
+const ipcRenderer = electron.ipcRenderer
+
+
 
 class Home extends React.Component {
   constructor(props) {
@@ -24,7 +28,13 @@ class Home extends React.Component {
   }
 
   onOpenExistProjectClick() {
-    mainProcess.openExistingProject()
+    // mainProcess.openExistingProject()
+    // ipcRenderer.once('open-project-reply', (event, arg) => {
+    //   console.log(arg.meta)
+    //   console.log(arg.tree)
+    // })
+    ipcRenderer.send('open-project', 'open project')
+    router.navigate('read')
   }
 
   render() {

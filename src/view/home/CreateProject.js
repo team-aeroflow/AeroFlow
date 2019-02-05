@@ -5,6 +5,7 @@ const remote = electron.remote
 // const ipcRenderer = electron.ipcRenderer
 const mainProcess = remote.require('./main.js')
 
+
 class CreateProject extends React.Component {
   constructor(props) {
     super(props)
@@ -26,8 +27,6 @@ class CreateProject extends React.Component {
   onNameSubmit() {
     const { projectName } = this.state
     const isCreate = mainProcess.createProject(projectName)
-    console.log('creating ... ')
-    console.log(isCreate ? 'create success' : 'error')
     // TODO: set Loading
     // TODO: route page after loading success
   }

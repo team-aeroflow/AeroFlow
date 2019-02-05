@@ -9,19 +9,16 @@ const { fork, spawn } = require('child_process')
 
 const path = require('path')
 const url = require('url')
+const ipcMain = electron.ipcMain
 
 let mainWindow
 
-exports.getFileTree = () => {
-  const tree = execSync(`cd src && tree`, { encoding: 'utf-8' })
+exports.getFileTree = (path) => {
+  const tree = execSync(`cd ${path}/src && tree`, { encoding: 'utf-8' })
   return tree
 }
 
-exports.getFileFromUser = (fileName) => {
-  const filePath = path.resolve(__dirname, `${fileName}`)
-  const code = fs.readFileSync(filePath).toString()
-  return code
-}
+
 
 exports.getDirectoryPath = () => {
   const directory = dialog.showOpenDialog(mainWindow, {
@@ -44,10 +41,38 @@ exports.createProject = (name) => {
   })
 }
 
-exports.openExistingProject = () => {
-  const path = this.getDirectoryPath()
-  console.log(path)
+exports.readFileFromUser = (_path, fileName) => {
+  const filePath = path.resolve(_path, `${fileName}`)
+  const code = fs.readFileSync(filePath).toString()
+  return code
 }
+
+exports.openExistingProject = () => {
+  const getPath = this.getDirectoryPath()
+  const tree = this.getFileTree(getPath)
+  const metaPath = `${getPath}/src/state/__state__/`
+  const meta = this.readFileFromUser(metaPath, 'meta.json')
+
+  // console.log(tree)
+  // ipcMain.on('file-tree', (event, arg) => {
+  //   console.log(arg)
+  //   // event.sender.send('file-tree-reply', 'kuay')
+  //   // event.sender.send('asynchronous-reply', 'async pong')
+  // })
+}
+
+ipcMain.once('open-project', (event, arg) => {
+  const getPath = this.getDirectoryPath()
+  const tree = this.getFileTree(getPath)
+  const metaPath = `${getPath}/src/state/__state__/`
+  const meta = this.readFileFromUser(metaPath, 'meta.json')
+
+  console.log(arg) // prints "open project" 
+
+  event.sender.send('open-project-reply', { tree, meta })
+})
+
+
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -57,8 +82,20 @@ function createWindow() {
     width: 800,
     height: 600
   })
+  // mainWindow.webContents.send('data', { msg: 'hello from main process' })
+
+  // mainWindow.webContents.send('data', { msg: 'hello from main process' })
+  // mainWindow.webContents.once('dom-ready', () => {
+  //   win.webContents
+  //     .send('sum-request', 23, 98, 3, 61)
+  //   ipcMain.once('sum-reply', (event, sum) => {
+  //     doJobWithResult(sum)
+  //   })
+  // })
 
   mainWindow.loadURL('http://localhost:3000')
+
+
 
   mainWindow.webContents.openDevTools()
 

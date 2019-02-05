@@ -13,7 +13,7 @@ const App = () => (
   </RouteProvider>
 )
 
-router.start()
+router.start('')
 ReactDOM.render(<App />, document.getElementById('root'))
 
 // If you want your app to work offline and load faster, you can change

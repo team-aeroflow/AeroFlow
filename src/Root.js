@@ -3,6 +3,7 @@ import './Root.css'
 
 import { RouteNode } from 'react-router5'
 import Home from './view/home/Home'
+import Dashboard from './view/dashboard/Dashboard'
 
 class Root extends Component {
   renderChild(route) {
@@ -10,7 +11,7 @@ class Root extends Component {
     if (route.name === 'home') {
       return <Home />
     } else if (route.name === 'read') {
-      return '2'
+      return <Dashboard />
     }
   }
 
