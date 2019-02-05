@@ -8,13 +8,12 @@ const remote = electron.remote
 const mainProcess = remote.require('./main.js')
 const ipcRenderer = electron.ipcRenderer
 
-
-
 class Home extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      showDialog: false
+      showDialog: false,
+      isProject: true,
     }
   }
 
@@ -31,9 +30,14 @@ class Home extends React.Component {
     ipcRenderer.send('open-project', 'open project')
     ipcRenderer.on('open-project-reply', (event, arg) => {
       const { success } = arg
-      // console.log(arg)
       if (!success) {
-        console.log('No such file or directory')
+        console.log('This project not support')
+        this.setState(prevState => {
+          return {
+            ...prevState,
+            isProject: !this.state.isProject
+          }
+        })
         return;
       } 
       router.navigate('dashboard')
@@ -41,12 +45,13 @@ class Home extends React.Component {
   }
 
   render() {
-    const { showDialog } = this.state
+    const { showDialog, isProject } = this.state
     return (
       <div>
         <button onClick={this.isOpenNewProject.bind(this)}>New Project</button>
         {showDialog ? <CreateProject /> : null}
         <div>__________</div>
+        {!isProject ? "This project not support" : null}
         <button onClick={this.onOpenExistProjectClick.bind(this)}>Open Existing...</button>
       </div>
     )
