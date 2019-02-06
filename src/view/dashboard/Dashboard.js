@@ -10,7 +10,6 @@ class Dashboard extends React.Component {
     this.state = {
       button: [],
       path: '',
-      code: 'kuay'
     }
   }
 
@@ -21,10 +20,10 @@ class Dashboard extends React.Component {
         return {
           ...prevState,
           path: arg.path,
-          // button: arg.tree.split('\n').slice(0, -1)
           button: arg.tree
         }
       })
+      ipcRenderer.send('watch-file', arg.path)
     })
   }
 
@@ -33,12 +32,6 @@ class Dashboard extends React.Component {
     ipcRenderer.on('watch-file-response', (event, arg) => {
       console.log('response ...')
       console.log(arg)
-      this.setState(prevState => {
-        return {
-          ...prevState,
-          code: arg
-        }
-      })
     })
   }
 
@@ -65,7 +58,6 @@ class Dashboard extends React.Component {
             )
           })
         }
-        {/* <textarea disabled={true} value={code} style={{ fontSize: '11pt' }}></textarea> */}
       </div>
     )
   }

@@ -2,14 +2,15 @@ const electron = require('electron')
 const app = electron.app
 const BrowserWindow = electron.BrowserWindow
 const dialog = electron.dialog
+const ipcMain = electron.ipcMain
+
 const fs = require('fs')
+const path = require('path')
+const url = require('url')
+const watch = require('node-watch')
 
 const execSync = require('child_process').execSync
 const { fork, spawn } = require('child_process')
-
-const path = require('path')
-const url = require('url')
-const ipcMain = electron.ipcMain
 
 let mainWindow
 
@@ -60,17 +61,28 @@ exports.readFileFromUser = (_path, fileName) => {
 }
 
 ipcMain.on('read-file', (event, arg) => {
-  console.log(arg)
+  console.log('arg', arg)
   if (fs.lstatSync(arg).isDirectory()) {
     return;
   }
   const code = fs.readFileSync(arg).toString()
   event.sender.send('read-file-click', code)
+})
 
-  fs.watchFile(arg, (cur, prev) => {
-    const content = fs.readFileSync(arg).toString()
-    event.sender.send('watch-file-response', content)
-    console.log(content)
+ipcMain.on('watch-file', (event, arg) => {
+  console.log(arg)
+  watch(arg, { recursive: true }, function (evt, name) {
+    console.log(`file ${name} changed!`)
+    if (!fs.existsSync(name)) {
+      console.log('no file or directory')
+    } else {
+      if (fs.lstatSync(name).isDirectory()) {
+        console.log('this is directory')
+      } else {
+        const code = fs.readFileSync(name).toString()
+        event.sender.send('watch-file-response', code)
+      }
+    }
   })
 })
 
