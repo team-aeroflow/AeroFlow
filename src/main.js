@@ -51,8 +51,15 @@ exports.readFileFromUser = (_path, fileName) => {
 
 ipcMain.on('read-file', (event, arg) => {
   console.log(arg)
-  console.log(this.readFileFromUser(arg, ''))
-  event.sender.send('read-file-response', this.readFileFromUser(arg, ''))
+  const code = fs.readFileSync(arg).toString()
+  event.sender.send('read-file-click', code)
+  
+  fs.watchFile(arg, (cur, prev) => {
+    const content = fs.readFileSync(arg).toString()
+    event.sender.send('read-file-response', content)
+    console.log(content)
+  })
+  // event.sender.send('read-file-response',  )
 })
 
 ipcMain.on('open-project', (event, arg) => {
@@ -89,11 +96,8 @@ function createWindow() {
     width: 800,
     height: 600
   })
-
   mainWindow.loadURL('http://localhost:3000')
-
   mainWindow.webContents.openDevTools()
-
   mainWindow.on('closed', function () {
     mainWindow = null
   })

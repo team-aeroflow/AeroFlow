@@ -10,13 +10,12 @@ class Dashboard extends React.Component {
     this.state = {
       button: [],
       path: '',
-      code: ''
+      code: 'kuay'
     }
   }
 
   componentDidMount() {
-    // ต้องใช้ path เดิมหลังจากที่ open project มาแล้ว ดังนั้นแล้วเราจะนำ path นั้นไปเก็บอย่างไรดี
-    ipcRenderer.on('dashboard', (event, arg) => {
+    const dashboardListener = ipcRenderer.on('dashboard', (event, arg) => {
       console.log(arg.path)
       this.setState(prevState => {
         return {
@@ -28,17 +27,31 @@ class Dashboard extends React.Component {
     })
   }
 
+  componentDidUpdate() {
+    console.log('update!')
+    ipcRenderer.on('read-file-response', (event, arg) => {
+      console.log('response ...')
+      console.log(arg)
+      this.setState(prevState => {
+        return {
+          ...prevState,
+          code: arg
+        }
+      })
+    })
+  }
+
   onCodeClick(source) {
     const { path } = this.state
     ipcRenderer.send('read-file', `${path}/${source}`)
-    ipcRenderer.on('read-file-response', (event, arg) => {
+    ipcRenderer.on('read-file-click', (event, arg) => {
       console.log(arg)
     })
   }
 
   render() {
     console.log(this.state.button)
-    const { button, code } = this.state
+    const { button } = this.state
     return (
       <div>
         DASHBOARD
@@ -51,8 +64,7 @@ class Dashboard extends React.Component {
             )
           })
         }
-        <textarea disabled={true} value={code} style={{ fontSize: '11pt' }}></textarea>
-
+        {/* <textarea disabled={true} value={code} style={{ fontSize: '11pt' }}></textarea> */}
       </div>
     )
   }
