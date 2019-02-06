@@ -21,7 +21,8 @@ class Dashboard extends React.Component {
         return {
           ...prevState,
           path: arg.path,
-          button: arg.tree.split('\n').slice(0, -1)
+          // button: arg.tree.split('\n').slice(0, -1)
+          button: arg.tree
         }
       })
     })
@@ -29,7 +30,7 @@ class Dashboard extends React.Component {
 
   componentDidUpdate() {
     console.log('update!')
-    ipcRenderer.on('read-file-response', (event, arg) => {
+    ipcRenderer.on('watch-file-response', (event, arg) => {
       console.log('response ...')
       console.log(arg)
       this.setState(prevState => {

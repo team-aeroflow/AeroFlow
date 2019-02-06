@@ -13,13 +13,23 @@ const ipcMain = electron.ipcMain
 
 let mainWindow
 
+filterDirectory = (_path, fileList) => {
+  const arrFile = []
+  fileList.map((data, i) => {
+    if (!fs.lstatSync(`${_path}/${data}`).isDirectory()) {
+      arrFile.push(data)
+    }
+  })
+  return arrFile
+}
+
 exports.getFileList = (path) => {
   if (!fs.existsSync(`${path}/src`)) {
     console.log('No such file or directory')
     return;
   }
-  const tree = execSync(`cd ${path} && find src`, { encoding: 'utf-8' })
-  return tree
+  const fileList = execSync(`cd ${path} && find src`, { encoding: 'utf-8' })
+  return filterDirectory(path, fileList.toString().split('\n').slice(0, -1))
 }
 
 exports.getDirectoryPath = () => {
@@ -51,15 +61,17 @@ exports.readFileFromUser = (_path, fileName) => {
 
 ipcMain.on('read-file', (event, arg) => {
   console.log(arg)
+  if (fs.lstatSync(arg).isDirectory()) {
+    return;
+  }
   const code = fs.readFileSync(arg).toString()
   event.sender.send('read-file-click', code)
-  
+
   fs.watchFile(arg, (cur, prev) => {
     const content = fs.readFileSync(arg).toString()
-    event.sender.send('read-file-response', content)
+    event.sender.send('watch-file-response', content)
     console.log(content)
   })
-  // event.sender.send('read-file-response',  )
 })
 
 ipcMain.on('open-project', (event, arg) => {
@@ -75,8 +87,8 @@ ipcMain.on('open-project', (event, arg) => {
   }
   const meta = this.readFileFromUser(metaPath, 'meta.json')
 
-  console.log(arg) // prints "open project" 
-
+  // console.log(arg) // prints "open project" 
+  console.log(tree)
   event.sender.send('open-project-reply', {
     success: true
   })
