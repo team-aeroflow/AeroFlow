@@ -61,7 +61,7 @@ exports.readFileFromUser = (_path, fileName) => {
 }
 
 ipcMain.on('read-file', (event, arg) => {
-  console.log('arg', arg)
+  // console.log('arg', arg)
   if (fs.lstatSync(arg).isDirectory()) {
     return;
   }
@@ -70,19 +70,40 @@ ipcMain.on('read-file', (event, arg) => {
 })
 
 ipcMain.on('watch-file', (event, arg) => {
-  console.log(arg)
-  watch(arg, { recursive: true }, function (evt, name) {
-    console.log(`file ${name} changed!`)
-    if (!fs.existsSync(name)) {
-      console.log('no file or directory')
-    } else {
-      if (fs.lstatSync(name).isDirectory()) {
-        console.log('this is directory')
-      } else {
-        const code = fs.readFileSync(name).toString()
-        event.sender.send('watch-file-response', code)
+  let that = this
+  //FIXME: บ้างครั้งมีปัญหาขึ้น too many open file
+  // MaxListenersExceededWarning: Possible EventEmitter memory leak detected.
+  watch(arg, { recursive: true }, (evt, name) => {
+    const tree = that.getFileList(arg)
+    let code = ''
+    if (fs.existsSync(name)) {
+      if (!fs.lstatSync(name).isDirectory()) {
+        code = fs.readFileSync(name).toString()
       }
+    } else { // in case delete file
+      code = 'file delete'
     }
+
+    event.sender.send('watch-file-response', {
+      code,
+      path: arg,
+      tree
+    })
+  })
+})
+
+
+
+ipcMain.on('update-dashboard', (event, arg) => {
+  const lists = this.getFileList(arg)
+  if (arg === null || lists === undefined) {
+    return
+  }
+  console.log('ARG', arg)
+  console.log('LIST', lists)
+  event.sender.send('dashboard', {
+    tree: lists,
+    path: arg
   })
 })
 
@@ -91,7 +112,7 @@ ipcMain.on('open-project', (event, arg) => {
   const tree = this.getFileList(getPath)
   const metaPath = `${getPath}/src/state/__state__/`
   if (tree === undefined || !fs.existsSync(metaPath)) {
-    console.log('No such file or directory')
+    // console.log('No such file or directory')
     event.sender.send('open-project-reply', {
       success: false
     })
@@ -99,8 +120,6 @@ ipcMain.on('open-project', (event, arg) => {
   }
   const meta = this.readFileFromUser(metaPath, 'meta.json')
 
-  // console.log(arg) // prints "open project" 
-  console.log(tree)
   event.sender.send('open-project-reply', {
     success: true
   })
