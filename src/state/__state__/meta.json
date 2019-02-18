@@ -1,3 +1,20 @@
 {
-  "states": {}
+  "states": {
+    "home": {
+      "name": "home",
+      "flowType": "HomeState",
+      "actions": {},
+      "channels": {},
+      "effects": {},
+      "reducers": {}
+    },
+    "dashboard": {
+      "name": "dashboard",
+      "flowType": "DashboardState",
+      "actions": {},
+      "channels": {},
+      "effects": {},
+      "reducers": {}
+    }
+  }
 }

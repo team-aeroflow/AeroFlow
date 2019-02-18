@@ -3,6 +3,8 @@
 
 // @flow
 
+import type {HomeState} from './home/types'
+import type {DashboardState} from './dashboard/types'
 
 export type Action<P> = {
   type: string,
@@ -14,4 +16,6 @@ export type Reducer<S, P> = (state: S, action: Action<P>) => S
 export type Effect = Generator<any, any, any>
 
 export type ApplicationState = {
+  home: HomeState,
+  dashboard: DashboardState,
 }

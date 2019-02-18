@@ -6,6 +6,10 @@ import createSagaMiddleware from 'redux-saga'
 import {router5Middleware as createRouterMiddleware, router5Reducer} from 'redux-router5'
 import {router} from '../router'
 import {initialState} from './initialState'
+import {homeReducer} from './home/reducers'
+import {homeEffects} from './home/effects'
+import {dashboardReducer} from './dashboard/reducers'
+import {dashboardEffects} from './dashboard/effects'
 
 const sagaMiddleware = createSagaMiddleware()
 const routerMiddleware = createRouterMiddleware(router)
@@ -15,6 +19,8 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 const store = createStore(
   combineReducers({
     router: router5Reducer,
+    home: homeReducer,
+    dashboard: dashboardReducer,
   }),
   initialState,
   composeEnhancers(applyMiddleware(
@@ -22,6 +28,8 @@ const store = createStore(
   ))
 )
 
+homeEffects.forEach(fx => sagaMiddleware.run(fx))
+dashboardEffects.forEach(fx => sagaMiddleware.run(fx))
 
 export {
   store
