@@ -34,6 +34,9 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "electron": "^4.0.0"
+    "@tanawat/generator-redux-plus": "^1.0.1",
+    "electron": "^4.0.0",
+    "flow-bin": "^0.93.0",
+    "yo": "^2.0.5"
   }
 }
