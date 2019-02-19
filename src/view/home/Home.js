@@ -5,11 +5,6 @@ import { router } from '../../router'
 import { connect } from 'react-redux'
 import { homeActions } from '../../state/home/actions'
 
-const electron = window.require('electron')
-const remote = electron.remote
-const mainProcess = remote.require('./main.js')
-const ipcRenderer = electron.ipcRenderer
-
 class Home extends React.Component {
   constructor(props) {
     super(props)
@@ -29,22 +24,21 @@ class Home extends React.Component {
   }
 
   onOpenExistProjectClick() {
-    // ipcRenderer.send('open-project', 'open project')
     this.props.openProject()
-    ipcRenderer.on('open-project-response', (event, arg) => {
-      const { success } = arg
-      if (!success) {
-        console.log('This project not support')
-        this.setState(prevState => {
-          return {
-            ...prevState,
-            isProject: !this.state.isProject
-          }
-        })
-        return;
-      }
-      router.navigate('dashboard')
-    })
+    // ipcRenderer.on('open-project-response', (event, arg) => {
+    //   const { success } = arg
+    //   if (!success) {
+    //     console.log('This project not support')
+    //     this.setState(prevState => {
+    //       return {
+    //         ...prevState,
+    //         isProject: !this.state.isProject
+    //       }
+    //     })
+    //     return;
+    //   }
+    //   router.navigate('dashboard')
+    // })
   }
 
   render() {
