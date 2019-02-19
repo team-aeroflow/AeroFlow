@@ -3,6 +3,8 @@
 
 // @flow
 
+import {openProjectEffect} from './openProject'
 
 export const homeEffects = [
+  openProjectEffect,
 ]

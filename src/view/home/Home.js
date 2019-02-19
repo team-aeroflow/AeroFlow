@@ -2,6 +2,8 @@ import React from 'react'
 import './Home.css'
 import CreateProject from './CreateProject'
 import { router } from '../../router'
+import { connect } from 'react-redux'
+import { homeActions } from '../../state/home/actions'
 
 const electron = window.require('electron')
 const remote = electron.remote
@@ -27,8 +29,9 @@ class Home extends React.Component {
   }
 
   onOpenExistProjectClick() {
-    ipcRenderer.send('open-project', 'open project')
-    ipcRenderer.on('open-project-reply', (event, arg) => {
+    // ipcRenderer.send('open-project', 'open project')
+    this.props.openProject()
+    ipcRenderer.on('open-project-response', (event, arg) => {
       const { success } = arg
       if (!success) {
         console.log('This project not support')
@@ -39,7 +42,7 @@ class Home extends React.Component {
           }
         })
         return;
-      } 
+      }
       router.navigate('dashboard')
     })
   }
@@ -58,4 +61,18 @@ class Home extends React.Component {
   }
 }
 
-export default Home
+function mapStateToProps(staet) {
+  return {
+
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    openProject: () => {
+      dispatch(homeActions.openProject())
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home)

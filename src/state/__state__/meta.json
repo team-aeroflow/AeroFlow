@@ -3,9 +3,20 @@
     "home": {
       "name": "home",
       "flowType": "HomeState",
-      "actions": {},
+      "actions": {
+        "openProject": {
+          "name": "openProject",
+          "flowType": "OpenProject",
+          "id": "home/OPEN_PROJECT",
+          "reducer": true
+        }
+      },
       "channels": {},
-      "effects": {},
+      "effects": {
+        "openProject": {
+          "name": "openProject"
+        }
+      },
       "reducers": {}
     },
     "dashboard": {

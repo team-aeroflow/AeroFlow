@@ -113,14 +113,14 @@ ipcMain.on('open-project', (event, arg) => {
   const metaPath = `${getPath}/src/state/__state__/`
   if (tree === undefined || !fs.existsSync(metaPath)) {
     // console.log('No such file or directory')
-    event.sender.send('open-project-reply', {
+    event.sender.send('open-project-response', {
       success: false
     })
     return;
   }
   const meta = this.readFileFromUser(metaPath, 'meta.json')
 
-  event.sender.send('open-project-reply', {
+  event.sender.send('open-project-response', {
     success: true
   })
   event.sender.send('dashboard', {

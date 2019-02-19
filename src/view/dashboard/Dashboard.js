@@ -16,7 +16,6 @@ class Dashboard extends React.Component {
   componentDidMount() {
     //TODO: หลังจากที่ watch แล้ว เมื่อสร้างไฟล์ใหม่มา หรือลบไฟล์ ปุ่มก็ควรจะเพิ่ม/ลด ตามไฟล์ด้วย
     ipcRenderer.on('dashboard', (event, arg) => {
-      // console.log('didMount', arg.path)
       this.setState(prevState => {
         return {
           ...prevState,

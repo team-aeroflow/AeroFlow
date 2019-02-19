@@ -6,11 +6,15 @@ import * as serviceWorker from './serviceWorker'
 
 import { RouteProvider } from 'react-router5'
 import { router } from './router'
+import { Provider } from 'react-redux'
+import { store } from './state/store'
 
 const App = () => (
-  <RouteProvider router={router}>
-    <Root />
-  </RouteProvider>
+  <Provider store={store}>
+    <RouteProvider router={router}>
+      <Root />
+    </RouteProvider>
+  </Provider>
 )
 
 router.start('')

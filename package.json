@@ -7,6 +7,7 @@
     "node-watch": "^0.6.0",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
+    "react-redux": "^6.0.0",
     "react-router-dom": "^4.3.1",
     "react-router5": "^6.3.0",
     "react-scripts": "2.1.2",
@@ -22,7 +23,11 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "electron": "electron ."
+    "electron": "electron .",
+    "create-state": "yarn yo @tanawat/redux-plus:create-state --install",
+    "create-action": "yarn yo @tanawat/redux-plus:create-action --install",
+    "create-effect": "yarn yo @tanawat/redux-plus:create-effect --install",
+    "create-reducer": "yarn yo @tanawat/redux-plus:create-reducer --install"
   },
   "eslintConfig": {
     "extends": "react-app"

@@ -3,6 +3,8 @@
 
 // @flow
 
+import {openProject} from './openProject'
 
 export const homeActions = {
+  openProject,
 }
