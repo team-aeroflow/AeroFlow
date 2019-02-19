@@ -9,12 +9,20 @@
           "flowType": "OpenProject",
           "id": "home/OPEN_PROJECT",
           "reducer": true
+        },
+        "createProject": {
+          "name": "createProject",
+          "flowType": "CreateProject",
+          "id": "home/CREATE_PROJECT"
         }
       },
       "channels": {},
       "effects": {
         "openProject": {
           "name": "openProject"
+        },
+        "createProject": {
+          "name": "createProject"
         }
       },
       "reducers": {}

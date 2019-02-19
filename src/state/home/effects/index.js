@@ -4,7 +4,9 @@
 // @flow
 
 import {openProjectEffect} from './openProject'
+import {createProjectEffect} from './createProject'
 
 export const homeEffects = [
   openProjectEffect,
+  createProjectEffect,
 ]

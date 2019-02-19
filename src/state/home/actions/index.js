@@ -4,7 +4,9 @@
 // @flow
 
 import {openProject} from './openProject'
+import {createProject} from './createProject'
 
 export const homeActions = {
   openProject,
+  createProject,
 }

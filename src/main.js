@@ -37,11 +37,17 @@ exports.getDirectoryPath = () => {
   const directory = dialog.showOpenDialog(mainWindow, {
     properties: ['openDirectory']
   })
+  if (directory === undefined) {
+    return
+  }
   return directory[0]
 }
 
 exports.createProject = (name) => {
   const path = this.getDirectoryPath()
+  if(path === undefined) {
+    return
+  }
   const process = fork(`${__dirname}/worker.js`)
   // send to forked process
   process.send({
@@ -91,8 +97,6 @@ ipcMain.on('watch-file', (event, arg) => {
     })
   })
 })
-
-
 
 ipcMain.on('update-dashboard', (event, arg) => {
   const lists = this.getFileList(arg)

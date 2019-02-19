@@ -1,10 +1,6 @@
 import React from 'react'
-
-const electron = window.require('electron')
-const remote = electron.remote
-// const ipcRenderer = electron.ipcRenderer
-const mainProcess = remote.require('./main.js')
-
+import { homeActions } from '../../state/home/actions'
+import { connect } from 'react-redux'
 
 class CreateProject extends React.Component {
   constructor(props) {
@@ -26,7 +22,7 @@ class CreateProject extends React.Component {
 
   onNameSubmit() {
     const { projectName } = this.state
-    const isCreate = mainProcess.createProject(projectName)
+    this.props.createProject(projectName)
     // TODO: set Loading
     // TODO: route page after loading success
   }
@@ -44,4 +40,18 @@ class CreateProject extends React.Component {
   }
 }
 
-export default CreateProject
+function mapStateToProps(state) {
+  return {
+
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    createProject: (projectName) => {
+      dispatch(homeActions.createProject(projectName))
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CreateProject)

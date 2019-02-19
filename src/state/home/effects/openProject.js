@@ -17,6 +17,7 @@ const ipcRenderer = electron.ipcRenderer
 export function* openProjectEffect(): Effect {
   while (true) {
     const action = yield take(homeActions.openProject.id)
+    console.log(action)
     ipcRenderer.send('open-project', 'open project')
     ipcRenderer.on('open-project-response', (event, arg) => {
       const { success } = arg
