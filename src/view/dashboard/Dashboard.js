@@ -15,7 +15,7 @@ class Dashboard extends React.Component {
 
   componentDidMount() {
     //TODO: หลังจากที่ watch แล้ว เมื่อสร้างไฟล์ใหม่มา หรือลบไฟล์ ปุ่มก็ควรจะเพิ่ม/ลด ตามไฟล์ด้วย
-    ipcRenderer.on('dashboard', (event, arg) => {
+    ipcRenderer.on('on-dashboard', (event, arg) => {
       this.setState(prevState => {
         return {
           ...prevState,
@@ -29,7 +29,7 @@ class Dashboard extends React.Component {
 
   componentDidUpdate() {
     //FIXME: watch file ถูก render เป็นเท่าตัวทุกๆครั้งที่มีการแก้ไขภายใน file
-    ipcRenderer.on('watch-file-response', (event, arg) => {
+    ipcRenderer.once('watch-file-response', (event, arg) => {
       // console.log(arg)
       console.log(arg.code)
       this.setState(prevState => {

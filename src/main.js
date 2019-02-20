@@ -75,7 +75,7 @@ ipcMain.on('read-file', (event, arg) => {
   event.sender.send('read-file-click', code)
 })
 
-ipcMain.on('watch-file', (event, arg) => {
+ipcMain.once('watch-file', (event, arg) => {
   let that = this
   //FIXME: บ้างครั้งมีปัญหาขึ้น too many open file
   // MaxListenersExceededWarning: Possible EventEmitter memory leak detected.
@@ -105,7 +105,7 @@ ipcMain.on('update-dashboard', (event, arg) => {
   }
   console.log('ARG', arg)
   console.log('LIST', lists)
-  event.sender.send('dashboard', {
+  event.sender.send('on-dashboard', {
     tree: lists,
     path: arg
   })
@@ -127,7 +127,7 @@ ipcMain.on('open-project', (event, arg) => {
   event.sender.send('open-project-response', {
     success: true
   })
-  event.sender.send('dashboard', {
+  event.sender.send('on-dashboard', {
     tree,
     meta,
     path: getPath
