@@ -3,7 +3,7 @@ const app = electron.app
 const BrowserWindow = electron.BrowserWindow
 const dialog = electron.dialog
 const ipcMain = electron.ipcMain
-
+const os = require('os')
 const fs = require('fs')
 const path = require('path')
 const url = require('url')
@@ -135,6 +135,7 @@ ipcMain.on('open-project', (event, arg) => {
 })
 
 
+
 function createWindow() {
   mainWindow = new BrowserWindow({
     webPreferences: {
@@ -145,10 +146,15 @@ function createWindow() {
   })
   mainWindow.loadURL('http://localhost:3000')
   mainWindow.webContents.openDevTools()
+  BrowserWindow.addDevToolsExtension(
+    path.join(os.homedir(), '/Library/Application Support/Google/Chrome/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd/2.17.0_0')
+  )
+  
   mainWindow.on('closed', function () {
     mainWindow = null
   })
 }
+
 
 app.on('ready', createWindow)
 
