@@ -6,10 +6,13 @@
 import type {Action} from '../../types'
 import type {DashboardState} from '../types'
 
+import {setDashboardReducer} from './setDashboard'
 import {initialState} from './initialState'
 
 export const dashboardReducer = (state: DashboardState = initialState, action: Action<any>): DashboardState => {
   switch (action.type) {
+    case 'dashboard/SET_DASHBOARD':
+      return setDashboardReducer(state, action)
     default:
       return state
   }

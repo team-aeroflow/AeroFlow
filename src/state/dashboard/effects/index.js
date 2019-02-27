@@ -3,6 +3,8 @@
 
 // @flow
 
+import {enterDashboardEffect} from './enterDashboard'
 
 export const dashboardEffects = [
+  enterDashboardEffect,
 ]

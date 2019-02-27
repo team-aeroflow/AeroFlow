@@ -3,6 +3,8 @@
 
 // @flow
 
+import {setDashboard} from './setDashboard'
 
 export const dashboardActions = {
+  setDashboard,
 }

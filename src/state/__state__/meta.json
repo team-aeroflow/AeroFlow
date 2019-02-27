@@ -30,9 +30,20 @@
     "dashboard": {
       "name": "dashboard",
       "flowType": "DashboardState",
-      "actions": {},
+      "actions": {
+        "setDashboard": {
+          "name": "setDashboard",
+          "flowType": "SetDashboard",
+          "id": "dashboard/SET_DASHBOARD",
+          "reducer": true
+        }
+      },
       "channels": {},
-      "effects": {},
+      "effects": {
+        "enterDashboard": {
+          "name": "enterDashboard"
+        }
+      },
       "reducers": {}
     }
   }

@@ -1,7 +1,6 @@
 import React from 'react'
 import './Home.css'
 import CreateProject from './CreateProject'
-import { router } from '../../router'
 import { connect } from 'react-redux'
 import { homeActions } from '../../state/home/actions'
 

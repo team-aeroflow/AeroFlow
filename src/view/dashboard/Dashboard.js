@@ -1,4 +1,7 @@
 import React from 'react'
+import { connect } from 'react-redux'
+import { dashboardActions } from '../../state/dashboard/actions'
+
 const electron = window.require('electron')
 const remote = electron.remote
 const mainProcess = remote.require('./main.js')
@@ -14,21 +17,20 @@ class Dashboard extends React.Component {
   }
 
   componentDidMount() {
-    //TODO: หลังจากที่ watch แล้ว เมื่อสร้างไฟล์ใหม่มา หรือลบไฟล์ ปุ่มก็ควรจะเพิ่ม/ลด ตามไฟล์ด้วย
-    ipcRenderer.on('on-dashboard', (event, arg) => {
-      this.setState(prevState => {
-        return {
-          ...prevState,
-          path: arg.path,
-          button: arg.tree
-        }
-      })
-      ipcRenderer.send('watch-file', arg.path)
-    })
+    // this.props.setDashboard()
+    // ipcRenderer.on('on-dashboard', (event, arg) => {
+    //   this.setState(prevState => {
+    //     return {
+    //       ...prevState,
+    //       path: arg.path,
+    //       button: arg.tree
+    //     }
+    //   })
+    //   ipcRenderer.send('watch-file', arg.path)
+    // })
   }
 
   componentDidUpdate() {
-    //FIXME: watch file ถูก render เป็นเท่าตัวทุกๆครั้งที่มีการแก้ไขภายใน file
     ipcRenderer.once('watch-file-response', (event, arg) => {
       // console.log(arg)
       console.log(arg.code)
@@ -66,6 +68,20 @@ class Dashboard extends React.Component {
         }
       </div>
     )
+  }
+}
+
+function mapStateToProps(state) {
+  return {
+
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    setDashboard: () => {
+      dispatch(dashboardActions.setDashboard())
+    }
   }
 }
 
