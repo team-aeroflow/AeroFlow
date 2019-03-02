@@ -77,8 +77,6 @@ ipcMain.on('read-file', (event, arg) => {
 
 ipcMain.once('watch-file', (event, arg) => {
   let that = this
-  //FIXME: บ้างครั้งมีปัญหาขึ้น too many open file
-  // MaxListenersExceededWarning: Possible EventEmitter memory leak detected.
   watch(arg, { recursive: true }, (evt, name) => {
     const tree = that.getFileList(arg)
     let code = ''
@@ -133,8 +131,6 @@ ipcMain.on('open-project', (event, arg) => {
     path: getPath
   })
 })
-
-
 
 function createWindow() {
   mainWindow = new BrowserWindow({

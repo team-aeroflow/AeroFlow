@@ -1,5 +1,5 @@
 // @flow
-import type {Action} from '../../../state/types'
+import type { Action } from '../../../state/types'
 
 export type SetDashboardPayload = {
   // TODO: Add payload content
@@ -7,7 +7,7 @@ export type SetDashboardPayload = {
 
 const id = 'dashboard/SET_DASHBOARD'
 
-export const setDashboard = ({ meta, path, tree}): Action<SetDashboardPayload> => ({
+export const setDashboard = ({ meta, path, tree }): Action<SetDashboardPayload> => ({
   type: id,
   payload: {
     // TODO: Add payload content
