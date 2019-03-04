@@ -10,15 +10,13 @@ import {
 } from 'redux-saga/effects'
 
 const electron = window.require('electron')
-const remote = electron.remote
-const mainProcess = remote.require('./main.js')
 const ipcRenderer = electron.ipcRenderer
 
 const updateDashboard = () => {
   return new Promise((resolve, reject) => {
-    ipcRenderer.on('on-dashboard', (event, arg) => {
-      ipcRenderer.send('watch-file', arg.path)
+    ipcRenderer.once('on-dashboard', (event, arg) => {
       resolve(arg)
+      ipcRenderer.send('watch-file', arg.path)
     })
   })
 }

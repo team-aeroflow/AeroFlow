@@ -1,10 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { dashboardActions } from '../../state/dashboard/actions'
+import { prev } from 'locutus/php/array';
 
 const electron = window.require('electron')
-const remote = electron.remote
-const mainProcess = remote.require('./main.js')
 const ipcRenderer = electron.ipcRenderer
 
 class Dashboard extends React.Component {
@@ -16,8 +15,17 @@ class Dashboard extends React.Component {
     }
   }
 
-  componentDidMount() {
-    // this.props.setDashboard()
+  componentWillReceiveProps(props) {
+    const { meta, path, tree } = props
+    if(this.props !== props) {
+      this.setState(prevState => {
+        return {
+          ...prevState,
+          path,
+          button: tree,
+        }
+      })
+    }
     // ipcRenderer.on('on-dashboard', (event, arg) => {
     //   this.setState(prevState => {
     //     return {
@@ -32,11 +40,11 @@ class Dashboard extends React.Component {
 
   componentDidUpdate() {
     ipcRenderer.once('watch-file-response', (event, arg) => {
-      // console.log(arg)
-      console.log(arg.code)
+      console.log(arg.tree)
       this.setState(prevState => {
         return {
           ...prevState,
+          path: arg.path,
           button: arg.tree
         }
       })
@@ -72,17 +80,21 @@ class Dashboard extends React.Component {
 }
 
 function mapStateToProps(state) {
+  const { meta, path, tree } = state.dashboard
+  // console.log(meta, path, tree)
   return {
-
+    meta,
+    path,
+    tree
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    setDashboard: () => {
-      dispatch(dashboardActions.setDashboard())
-    }
+    // setDashboard: () => {
+    // dispatch(dashboardActions.setDashboard())
+    // }
   }
 }
 
-export default Dashboard
+export default connect(mapStateToProps, mapDispatchToProps)(Dashboard)

@@ -76,9 +76,10 @@ ipcMain.on('read-file', (event, arg) => {
 })
 
 ipcMain.once('watch-file', (event, arg) => {
-  let that = this
+  let self = this
   watch(arg, { recursive: true }, (evt, name) => {
-    const tree = that.getFileList(arg)
+    const tree = self.getFileList(arg)
+    console.log(tree)
     let code = ''
     if (fs.existsSync(name)) {
       if (!fs.lstatSync(name).isDirectory()) {

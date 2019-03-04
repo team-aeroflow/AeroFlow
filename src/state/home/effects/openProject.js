@@ -6,12 +6,10 @@ import {
   take,
 } from 'redux-saga/effects'
 import { homeActions } from '../actions'
-import { actions as routerActions } from 'redux-router5'
+// import { actions as routerActions } from 'redux-router5'
 import { router } from '../../../router'
 
 const electron = window.require('electron')
-const remote = electron.remote
-const mainProcess = remote.require('./main.js')
 const ipcRenderer = electron.ipcRenderer
 
 export function* openProjectEffect(): Effect {
@@ -23,7 +21,7 @@ export function* openProjectEffect(): Effect {
       const { success } = arg
       if (!success) {
         console.log('This project not support')
-        return;
+        return
       }
       console.log('open project success')
       router.navigate('dashboard')
