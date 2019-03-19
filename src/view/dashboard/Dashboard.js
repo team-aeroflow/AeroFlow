@@ -17,7 +17,7 @@ class Dashboard extends React.Component {
 
   componentWillReceiveProps(props) {
     const { meta, path, tree } = props
-    if(this.props !== props) {
+    if (this.props !== props) {
       this.setState(prevState => {
         return {
           ...prevState,
@@ -26,21 +26,11 @@ class Dashboard extends React.Component {
         }
       })
     }
-    // ipcRenderer.on('on-dashboard', (event, arg) => {
-    //   this.setState(prevState => {
-    //     return {
-    //       ...prevState,
-    //       path: arg.path,
-    //       button: arg.tree
-    //     }
-    //   })
-    //   ipcRenderer.send('watch-file', arg.path)
-    // })
   }
 
   componentDidUpdate() {
     ipcRenderer.once('watch-file-response', (event, arg) => {
-      console.log(arg.tree)
+      console.log(arg.code)
       this.setState(prevState => {
         return {
           ...prevState,
@@ -60,11 +50,11 @@ class Dashboard extends React.Component {
   }
 
   render() {
-    // console.log(this.state.button)
-    const { button } = this.state
+    const { path, button } = this.state
     return (
       <div>
         DASHBOARD
+        <span style={{ display: 'block', fontSize: '14px' }}>PATH: {path}</span>
         {
           button.map((data, i) => {
             return (
@@ -81,7 +71,6 @@ class Dashboard extends React.Component {
 
 function mapStateToProps(state) {
   const { meta, path, tree } = state.dashboard
-  // console.log(meta, path, tree)
   return {
     meta,
     path,
@@ -91,8 +80,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    // setDashboard: () => {
-    // dispatch(dashboardActions.setDashboard())
+    // setDashboard: (a) => {
+    //   dispatch(dashboardActions.setDashboard(a))
     // }
   }
 }

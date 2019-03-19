@@ -14,16 +14,16 @@ class Home extends React.Component {
   }
 
   componentDidMount() {
-    document.addEventListener('keydown', this.keydownHandler.bind(this));
+    document.addEventListener('keydown', this.keydownHandler.bind(this))
   }
 
   componentWillUnmount() {
-    document.removeEventListener('keydown', this.keydownHandler.bind(this));
+    document.removeEventListener('keydown', this.keydownHandler.bind(this))
   }
 
   keydownHandler(e) {
     // CMD + O, CTRL + O to open project
-    if (((e.keyCode === 91 || e.metaKey) && e.keyCode === 79) || (e.ctrlKey && e.keyCode === 79)) { 
+    if (((e.keyCode === 91 || e.metaKey) && e.keyCode === 79) || (e.ctrlKey && e.keyCode === 79)) {
       this.props.openProject()
     }
   }
