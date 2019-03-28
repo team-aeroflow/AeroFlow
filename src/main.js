@@ -8,6 +8,7 @@ const fs = require('fs')
 const path = require('path')
 const url = require('url')
 const watch = require('node-watch')
+// const flow = require('flow-parser')
 
 const execSync = require('child_process').execSync
 const { fork, spawn } = require('child_process')
@@ -45,7 +46,7 @@ exports.getDirectoryPath = () => {
 
 exports.createProject = (name) => {
   const path = this.getDirectoryPath()
-  if(path === undefined) {
+  if (path === undefined) {
     return
   }
   const process = fork(`${__dirname}/worker.js`)
@@ -79,7 +80,7 @@ ipcMain.once('watch-file', (event, arg) => {
   let self = this
   watch(arg, { recursive: true }, (evt, name) => {
     const tree = self.getFileList(arg)
-    console.log(tree)
+    // console.log(tree)
     let code = ''
     if (fs.existsSync(name)) {
       if (!fs.lstatSync(name).isDirectory()) {
@@ -88,6 +89,29 @@ ipcMain.once('watch-file', (event, arg) => {
     } else { // in case delete file
       code = 'file delete'
     }
+
+    // WATCH EFFECT HERE
+    const meta = []
+    if (name.match(/state\/(\w+)\/effects\/(\w+)\.js/)) {
+      // console.log('watch', name)
+      console.log('watch', path.resolve(name))
+      const filePath = path.resolve(name)
+      const content = fs.readFileSync(filePath).toString()
+      const f = flow.parse(content, {})
+      const toJSON = f.body[f.body.length - 1].declaration.body.body[0].body
+
+      const body = toJSON.body
+
+
+
+      console.log(meta)
+    }
+
+
+
+
+    // END OF WATCH EFFECT
+
 
     event.sender.send('watch-file-response', {
       code,
@@ -146,7 +170,7 @@ function createWindow() {
   BrowserWindow.addDevToolsExtension(
     path.join(os.homedir(), '/Library/Application Support/Google/Chrome/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd/2.17.0_0')
   )
-  
+
   mainWindow.on('closed', function () {
     mainWindow = null
   })
