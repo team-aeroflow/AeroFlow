@@ -4,6 +4,7 @@
   "private": true,
   "main": "src/main.js",
   "dependencies": {
+    "flow-parser": "^0.95.2",
     "node-watch": "^0.6.0",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
