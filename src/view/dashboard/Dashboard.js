@@ -18,6 +18,7 @@ class Dashboard extends React.Component {
   componentWillReceiveProps(props) {
     const { meta, path, tree } = props
     if (this.props !== props) {
+      // console.log(tree)
       this.setState(prevState => {
         return {
           ...prevState,
@@ -30,7 +31,7 @@ class Dashboard extends React.Component {
 
   componentDidUpdate() {
     ipcRenderer.once('watch-file-response', (event, arg) => {
-      console.log(arg.code)
+      console.log(arg.tree)
       this.setState(prevState => {
         return {
           ...prevState,

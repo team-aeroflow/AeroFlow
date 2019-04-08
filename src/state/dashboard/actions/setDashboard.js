@@ -7,13 +7,14 @@ export type SetDashboardPayload = {
 
 const id = 'dashboard/SET_DASHBOARD'
 
-export const setDashboard = ({ meta, path, tree }): Action<SetDashboardPayload> => ({
+export const setDashboard = ({ meta, path, tree, effect }): Action<SetDashboardPayload> => ({
   type: id,
   payload: {
     // TODO: Add payload content
     meta,
     path,
-    tree
+    tree,
+    effect
   }
 })
 

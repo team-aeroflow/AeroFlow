@@ -31,6 +31,7 @@ export function* enterDashboardEffect(): Effect {
     const transition = yield take(routerTypes.TRANSITION_SUCCESS)
     if (transition.payload.route.name === 'dashboard') {
       const data = yield call(getDashboard)
+      console.log('data', data)
       yield put(dashboardActions.setDashboard(data))
     }
   }
