@@ -12,10 +12,7 @@ const flow = require('flow-parser')
 
 const execSync = require('child_process').execSync
 const { fork, spawn } = require('child_process')
-
-
 const utils = require('./utils/readEffect')
-
 
 let mainWindow
 
@@ -97,7 +94,7 @@ ipcMain.on('watch-file', (event, arg) => {
     if (code !== 'file delete') {
       if (name.match(/state\/(\w+)\/effects\/(\w+)\.js/)) {
         console.log('watch', path.resolve(name))
-        const parser = utils.ParserCode(name)
+        const parser = utils.ParserCode(path.resolve(name))
         console.log('parser', parser)
       }
     }
@@ -139,10 +136,15 @@ ipcMain.on('open-project', (event, arg) => {
   const effectPath = []
   tree.map((t) => {
     if (t.match(/src\/state\/(\w+)\/effects\/(\w+)\.js/)) {
-      effectPath.push(t)
+      effectPath.push(`${getPath}/${t}`)
     }
   })
-  console.log(effectPath)
+
+  effectPath.map((name) => {
+    utils.ParserCode(path.resolve(name))
+  })
+  console.log(utils.meta)
+  console.log(utils.meta.length)
 
   event.sender.send('open-project-response', {
     success: true
@@ -151,7 +153,8 @@ ipcMain.on('open-project', (event, arg) => {
     tree,
     meta,
     path: getPath,
-    effect: effectPath
+    effect_path: effectPath,
+    effects: utils.meta
   })
 })
 

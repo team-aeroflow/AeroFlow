@@ -2,6 +2,12 @@ const fs = require('fs')
 const path = require('path')
 const flow = require('flow-parser')
 
+function isIndexFile(str, target) {
+  return str.substr(-(target.length)) === target
+}
+
+const meta = []
+
 function ParserCode(name) {
   const filePath = path.resolve(name)
   const content = fs.readFileSync(filePath).toString()
@@ -11,12 +17,12 @@ function ParserCode(name) {
   }
 
   const f = flow.parse(content, {})
-  if (f.body[f.body.length - 1] === undefined || f.body[f.body.length - 1].declaration === undefined) {
+  if (f.body[f.body.length - 1] === undefined || f.body[f.body.length - 1].declaration === undefined || isIndexFile(name, "index.js")) {
     return
   }
   const toJSON = f.body[f.body.length - 1].declaration.body.body[0].body
   const body = toJSON.body
-  const meta = []
+  // const meta = []
 
   body.map((d, i) => {
     // console.log(d.type)
@@ -213,5 +219,7 @@ function ParserCode(name) {
 }
 
 module.exports = {
-  ParserCode
+  ParserCode,
+  isIndexFile,
+  meta
 }
