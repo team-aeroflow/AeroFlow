@@ -12,18 +12,21 @@ class Dashboard extends React.Component {
     this.state = {
       button: [],
       path: '',
+
+      effects: []
     }
   }
 
   componentWillReceiveProps(props) {
-    const { meta, path, tree } = props
+    const { meta, path, tree, effects } = props
     if (this.props !== props) {
-      // console.log(tree)
+      console.log(props)
       this.setState(prevState => {
         return {
           ...prevState,
           path,
           button: tree,
+          effects
         }
       })
     }
@@ -51,16 +54,26 @@ class Dashboard extends React.Component {
   }
 
   render() {
-    const { path, button } = this.state
+    const { path, button, effects } = this.state
     return (
       <div>
         DASHBOARD
         <span style={{ display: 'block', fontSize: '14px' }}>PATH: {path}</span>
         {
-          button.map((data, i) => {
+          // button.map((data, i) => {
+          //   return (
+          //     <div key={`${data}_${i}`}>
+          //       <button key={data} onClick={this.onCodeClick.bind(this, data)}>{data}</button>
+          //     </div>
+          //   )
+          // })
+
+          effects.map((data, i) => {
+            console.log(data.name)
             return (
-              <div key={`${data}_${i}`}>
-                <button key={data} onClick={this.onCodeClick.bind(this, data)}>{data}</button>
+              <div key={`${i}`} style={{margin: '10px', backgroundColor: 'red'}}>
+                <p>Name : {data.name === null ? 'null' : data.name} </p>
+                <p>{data.point_to === null ? 'null' : data.point_to}</p>
               </div>
             )
           })
@@ -71,11 +84,13 @@ class Dashboard extends React.Component {
 }
 
 function mapStateToProps(state) {
-  const { meta, path, tree } = state.dashboard
+  const { meta, path, tree, effects, effect_path } = state.dashboard
   return {
     meta,
     path,
-    tree
+    tree,
+    effects,
+    effect_path
   }
 }
 

@@ -8,7 +8,12 @@ function isIndexFile(str, target) {
 
 const meta = []
 
+function clearMeta() {
+  meta.length = 0
+}
+
 function ParserCode(name) {
+  // console.log('meta', meta)
   const filePath = path.resolve(name)
   const content = fs.readFileSync(filePath).toString()
 
@@ -218,8 +223,10 @@ function ParserCode(name) {
   return meta
 }
 
+
 module.exports = {
   ParserCode,
   isIndexFile,
-  meta
+  meta,
+  clearMeta
 }

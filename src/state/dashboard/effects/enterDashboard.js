@@ -16,7 +16,7 @@ const updateDashboard = () => {
   return new Promise((resolve, reject) => {
     ipcRenderer.once('on-dashboard', (event, arg) => {
       resolve(arg)
-      ipcRenderer.send('watch-file', arg.path)
+      ipcRenderer.send('watch-file', arg)
     })
   })
 }

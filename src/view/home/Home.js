@@ -11,14 +11,15 @@ class Home extends React.Component {
       showDialog: false,
       isProject: true,
     }
+    this.keydownHandler = this.keydownHandler.bind(this)
   }
 
   componentDidMount() {
-    document.addEventListener('keydown', this.keydownHandler.bind(this))
+    document.addEventListener('keydown', this.keydownHandler, false)
   }
 
   componentWillUnmount() {
-    document.removeEventListener('keydown', this.keydownHandler.bind(this))
+    document.removeEventListener('keydown', this.keydownHandler, false)
   }
 
   keydownHandler(e) {

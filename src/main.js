@@ -78,9 +78,11 @@ ipcMain.on('read-file', (event, arg) => {
 })
 
 ipcMain.on('watch-file', (event, arg) => {
+  console.log('arg', arg)
   let self = this
-  watch(arg, { recursive: true }, (evt, name) => {
-    const tree = self.getFileList(arg)
+  const p = arg.path
+  watch(p, { recursive: true }, (evt, name) => {
+    const tree = self.getFileList(p)
     // console.log(tree)
     let code = ''
     if (fs.existsSync(name)) {
@@ -91,17 +93,23 @@ ipcMain.on('watch-file', (event, arg) => {
       code = 'file delete'
     }
 
-    if (code !== 'file delete') {
-      if (name.match(/state\/(\w+)\/effects\/(\w+)\.js/)) {
-        console.log('watch', path.resolve(name))
-        const parser = utils.ParserCode(path.resolve(name))
-        console.log('parser', parser)
-      }
-    }
+    const effectPath = arg.effect_path
+    utils.clearMeta()
+    effectPath.map((name) => {
+      utils.ParserCode(path.resolve(name))
+    })
+    console.log(utils.meta)
+    // if (code !== 'file delete') {
+    //   if (name.match(/state\/(\w+)\/effects\/(\w+)\.js/)) {
+    //     console.log('watch', path.resolve(name))
+    //     const parser = utils.ParserCode(path.resolve(name))
+    //     console.log('parser', parser)
+    //   }
+    // }
 
     event.sender.send('watch-file-response', {
       code,
-      path: arg,
+      path: p,
       tree
     })
   })
@@ -143,8 +151,8 @@ ipcMain.on('open-project', (event, arg) => {
   effectPath.map((name) => {
     utils.ParserCode(path.resolve(name))
   })
-  console.log(utils.meta)
-  console.log(utils.meta.length)
+  // console.log(utils.meta)
+  // console.log(utils.meta.length)
 
   event.sender.send('open-project-response', {
     success: true
