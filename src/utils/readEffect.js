@@ -8,6 +8,19 @@ function isIndexFile(str, target) {
 
 const meta = []
 
+function removeItem(value, array) {
+  for (let i in array) {
+    if (array[i] === value) {
+      array.splice(i, 1)
+      break;
+    }
+  }
+}
+
+function isInArray(value, array) {
+  return array.indexOf(value) > -1
+}
+
 function clearMeta() {
   meta.length = 0
 }
@@ -228,5 +241,7 @@ module.exports = {
   ParserCode,
   isIndexFile,
   meta,
-  clearMeta
+  clearMeta,
+  isInArray,
+  removeItem
 }

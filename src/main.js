@@ -68,7 +68,7 @@ exports.readFileFromUser = (_path, fileName) => {
   return code
 }
 
-ipcMain.on('read-file', (event, arg) => {
+ipcMain.once('read-file', (event, arg) => {
   // console.log('arg', arg)
   if (fs.lstatSync(arg).isDirectory()) {
     return;
@@ -78,12 +78,14 @@ ipcMain.on('read-file', (event, arg) => {
 })
 
 ipcMain.on('watch-file', (event, arg) => {
-  console.log('arg', arg)
+  // console.log('arg', arg)
   let self = this
   const p = arg.path
   watch(p, { recursive: true }, (evt, name) => {
     const tree = self.getFileList(p)
     // console.log(tree)
+    console.log(evt, name)
+    // console.log(name)
     let code = ''
     if (fs.existsSync(name)) {
       if (!fs.lstatSync(name).isDirectory()) {
@@ -94,6 +96,15 @@ ipcMain.on('watch-file', (event, arg) => {
     }
 
     const effectPath = arg.effect_path
+    if (name.match(/(\w+)\/src\/state\/(\w+)\/effects\/(\w+)\.js/) && !utils.isInArray(name, effectPath)) {
+      // console.log('that effect!')
+      effectPath.push(name)
+    }
+    // console.log(effectPath)
+    if (code === 'file delete') {
+      utils.removeItem(name, effectPath)
+    }
+    // console.log(effectPath)
     utils.clearMeta()
     effectPath.map((name) => {
       utils.ParserCode(path.resolve(name))
@@ -142,6 +153,7 @@ ipcMain.on('open-project', (event, arg) => {
   const meta = this.readFileFromUser(metaPath, 'meta.json')
 
   const effectPath = []
+  utils.clearMeta()
   tree.map((t) => {
     if (t.match(/src\/state\/(\w+)\/effects\/(\w+)\.js/)) {
       effectPath.push(`${getPath}/${t}`)
