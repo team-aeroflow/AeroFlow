@@ -35,7 +35,7 @@ function ParserCode(name) {
   }
 
   const f = flow.parse(content, {})
-  if (f.body[f.body.length - 1] === undefined || f.body[f.body.length - 1].declaration === undefined || isIndexFile(name, "index.js")) {
+  if (f.body[f.body.length - 1] === undefined || f.body[f.body.length - 1].declaration === undefined || isIndexFile(name, "index.js") || f.body[f.body.length - 1].declaration.body.body.length === 0) {
     return
   }
   const toJSON = f.body[f.body.length - 1].declaration.body.body[0].body
@@ -84,11 +84,15 @@ function ParserCode(name) {
               effect,
               type,
               params: params.length === 0 ? null : params,
-              point_to: typeId[0] === undefined ? null : typeId[0]
+              point_to: typeId[0] === undefined ? null : typeId[0],
+              path: name
             })
           })
         } else if (body.type === 'ExpressionStatement') {
           const varName = null
+          if(body.expression.argument === undefined) {
+            return
+          }
           const effect = body.expression.argument.callee.name
           const type = effect === 'call' ? 'function' : 'action'
 
@@ -125,7 +129,8 @@ function ParserCode(name) {
             effect,
             type,
             params: params.length === 0 ? null : params,
-            point_to: typeId[0] === undefined ? null : typeId[0]
+            point_to: typeId[0] === undefined ? null : typeId[0],
+            path: name
           })
         }
       })
@@ -171,13 +176,17 @@ function ParserCode(name) {
           effect,
           type,
           params: params.length === 0 ? null : params,
-          point_to: typeId[0] === undefined ? null : typeId[0]
+          point_to: typeId[0] === undefined ? null : typeId[0],
+          path: name
         })
       })
     } else if (d.type === 'ExpressionStatement') {
       [d.expression].map((dat, j) => {
         // console.log(dat.argument.arguments[j].type)
         const varName = null
+        if(dat.argument === undefined) {
+          return
+        }
         const effect = dat.argument.callee.name
         const type = dat.argument.callee.name === 'call' ? 'function' : 'action'
         // console.log('TYPE:', type)
@@ -225,7 +234,8 @@ function ParserCode(name) {
           effect,
           type,
           params: params.length === 0 ? null : params,
-          point_to: typeId[0] === undefined ? null : typeId[0]
+          point_to: typeId[0] === undefined ? null : typeId[0],
+          path: name
         })
         // console.log('----')
       })

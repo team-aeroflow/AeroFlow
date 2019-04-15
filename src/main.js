@@ -58,7 +58,7 @@ exports.createProject = (name) => {
   })
   // listen for messages from forked process
   process.on('message', (message) => {
-    console.log('message from fork', message)
+    console.log('message from fork', message) // path, name
   })
 }
 
@@ -78,14 +78,13 @@ ipcMain.once('read-file', (event, arg) => {
 })
 
 ipcMain.on('watch-file', (event, arg) => {
-  // console.log('arg', arg)
+  console.log('arg', arg)
   let self = this
   const p = arg.path
+  console.log('p', p)
   watch(p, { recursive: true }, (evt, name) => {
     const tree = self.getFileList(p)
-    // console.log(tree)
     console.log(evt, name)
-    // console.log(name)
     let code = ''
     if (fs.existsSync(name)) {
       if (!fs.lstatSync(name).isDirectory()) {
@@ -97,7 +96,6 @@ ipcMain.on('watch-file', (event, arg) => {
 
     const effectPath = arg.effect_path
     if (name.match(/(\w+)\/src\/state\/(\w+)\/effects\/(\w+)\.js/) && !utils.isInArray(name, effectPath)) {
-      // console.log('that effect!')
       effectPath.push(name)
     }
     // console.log(effectPath)
@@ -110,18 +108,12 @@ ipcMain.on('watch-file', (event, arg) => {
       utils.ParserCode(path.resolve(name))
     })
     console.log(utils.meta)
-    // if (code !== 'file delete') {
-    //   if (name.match(/state\/(\w+)\/effects\/(\w+)\.js/)) {
-    //     console.log('watch', path.resolve(name))
-    //     const parser = utils.ParserCode(path.resolve(name))
-    //     console.log('parser', parser)
-    //   }
-    // }
 
     event.sender.send('watch-file-response', {
       code,
       path: p,
-      tree
+      tree,
+      effects: utils.meta
     })
   })
 })
@@ -139,6 +131,49 @@ ipcMain.on('update-dashboard', (event, arg) => {
   })
 })
 
+
+ipcMain.on('create-project', (event, arg) => {
+  const getPath = this.getDirectoryPath()
+  if (getPath === undefined) {
+    return
+  }
+  const process = fork(`${__dirname}/worker.js`)
+  // send to forked process
+  process.send({
+    path: getPath,
+    name: arg
+  })
+  // listen for messages from forked process
+  process.on('message', (message) => {
+    console.log('message from fork', message) // path, name
+    const tree = this.getFileList(message)
+    const metaPath = `${message}/src/state/__state__/`
+    const meta = this.readFileFromUser(metaPath, 'meta.json')
+
+    const effectPath = []
+    utils.clearMeta()
+    tree.map((t) => {
+      if (t.match(/src\/state\/(\w+)\/effects\/(\w+)\.js/)) {
+        effectPath.push(`${getPath}/${t}`)
+      }
+    })
+
+    effectPath.map((name) => {
+      utils.ParserCode(path.resolve(name))
+    })
+    event.sender.send('create-project-response', {
+      success: true
+    })
+    event.sender.send('on-dashboard', {
+      tree,
+      meta,
+      path: message,
+      effect_path: effectPath,
+      effects: utils.meta
+    })
+  })
+})
+
 ipcMain.on('open-project', (event, arg) => {
   const getPath = this.getDirectoryPath()
   const tree = this.getFileList(getPath)
@@ -151,7 +186,6 @@ ipcMain.on('open-project', (event, arg) => {
     return;
   }
   const meta = this.readFileFromUser(metaPath, 'meta.json')
-
   const effectPath = []
   utils.clearMeta()
   tree.map((t) => {
@@ -163,8 +197,6 @@ ipcMain.on('open-project', (event, arg) => {
   effectPath.map((name) => {
     utils.ParserCode(path.resolve(name))
   })
-  // console.log(utils.meta)
-  // console.log(utils.meta.length)
 
   event.sender.send('open-project-response', {
     success: true
