@@ -6,7 +6,9 @@ function isIndexFile(str, target) {
   return str.substr(-(target.length)) === target
 }
 
-const meta = []
+const meta = {}
+const nodes = []
+const links = []
 
 function removeItem(value, array) {
   for (let i in array) {
@@ -22,10 +24,16 @@ function isInArray(value, array) {
 }
 
 function clearMeta() {
-  meta.length = 0
+  // console.log('27', meta)
+  for(let datum in meta) {
+    delete meta[datum]
+  }
+  // console.log(31, meta)
+  nodes.length = 0
+  links.length = 0
 }
 
-function ParserCode(name) {
+function ParserEffect(name) {
   // console.log('meta', meta)
   const filePath = path.resolve(name)
   const content = fs.readFileSync(filePath).toString()
@@ -39,6 +47,7 @@ function ParserCode(name) {
     return
   }
   const toJSON = f.body[f.body.length - 1].declaration.body.body[0].body
+  const effectFunction = f.body[f.body.length - 1].declaration.id.name
   const body = toJSON.body
   // const meta = []
 
@@ -77,20 +86,47 @@ function ParserCode(name) {
                   const func = `${da.object.name}.${da.property.name}`
                   params.push(func)
                 }
+              } else if (da.type === 'CallExpression') {
+                const name = da.callee.object.name.replace('Actions', '')
+                const id = name + '/' + da.callee.property.name.split(/(?=[A-Z])/).join('_').toUpperCase()
+                typeId.push(id)
+                da.arguments.map((p) => {
+                  if (p.type === 'Identifier') {
+                    params.push(p.name)
+                  } else if (p.type === 'Literal') {
+                    params.push(p.value)
+                  }
+                })
               }
             })
-            meta.push({
-              name: varName,
+            if (effect !== 'call') {
+              nodes.push({
+                id: varName,
+                name: varName,
+                functionName: effectFunction,
+                effect,
+                type: 'effect',
+                params: params.length === 0 ? null : params,
+                point_to: null,
+                path: filePath
+              })
+            }
+            const name = typeId[0] === undefined ? params[0] : typeId[0]
+
+            nodes.push({
+              id: effect === 'take' ? name : effect === 'put' ? varName : varName,
+              name: effect === 'take' ? name : effect === 'put' ? varName : varName,
+              functionName: effectFunction,
               effect,
               type,
               params: params.length === 0 ? null : params,
-              point_to: typeId[0] === undefined ? null : typeId[0],
-              path: name
+              point_to: typeId[0] === undefined ? null : effect === 'take' ? varName : typeId[0],
+              path: filePath
             })
           })
         } else if (body.type === 'ExpressionStatement') {
           const varName = null
-          if(body.expression.argument === undefined) {
+          if (body.expression.argument === undefined) {
             return
           }
           const effect = body.expression.argument.callee.name
@@ -124,13 +160,16 @@ function ParserCode(name) {
               })
             }
           })
-          meta.push({
-            name: varName,
+          const name = typeId[0] === undefined ? params[0] : typeId[0]
+          nodes.push({
+            id: effect === 'call' ? name : effect === 'put' ? effectFunction : null,
+            name: effect === 'call' ? name : effect === 'put' ? effectFunction : null,
+            functionName: effectFunction,
             effect,
             type,
             params: params.length === 0 ? null : params,
-            point_to: typeId[0] === undefined ? null : typeId[0],
-            path: name
+            point_to: typeId[0] === undefined ? null : effect === 'take' ? varName : typeId[0],
+            path: filePath
           })
         }
       })
@@ -162,6 +201,7 @@ function ParserCode(name) {
               const name = da.object.object.name.replace('Actions', '')
               const id = name + '/' + da.object.property.name.split(/(?=[A-Z])/).join('_').toUpperCase()
               // console.log(id)
+              params.push(param)
               typeId.push(id)
             } else if (da.object.type === 'Identifier') {
               const param = `${da.object.name}.${da.property.name}`
@@ -171,24 +211,38 @@ function ParserCode(name) {
           }
         })
 
-        meta.push({
+        const name = typeId[0] === undefined ? params[0] : typeId[0]
+        // init node
+        nodes.push({
+          id: varName,
           name: varName,
+          functionName: effectFunction,
+          effect,
+          type: 'effect',
+          params: params.length === 0 ? null : params,
+          point_to: null,
+          path: filePath
+        })
+        nodes.push({
+          id: effect === 'take' ? name : effect === 'put' ? varName : varName,
+          name: effect === 'take' ? name : effect === 'put' ? varName : varName,
+          functionName: effectFunction,
           effect,
           type,
           params: params.length === 0 ? null : params,
-          point_to: typeId[0] === undefined ? null : typeId[0],
-          path: name
+          point_to: typeId[0] === undefined ? null : effect === 'take' ? varName : typeId[0],
+          path: filePath
         })
       })
     } else if (d.type === 'ExpressionStatement') {
       [d.expression].map((dat, j) => {
         // console.log(dat.argument.arguments[j].type)
         const varName = null
-        if(dat.argument === undefined) {
+        if (dat.argument === undefined) {
           return
         }
         const effect = dat.argument.callee.name
-        const type = dat.argument.callee.name === 'call' ? 'function' : 'action'
+        const type = dat.argument.callee.name === 'call' ? 'function' : 'effect'
         // console.log('TYPE:', type)
         // console.log(dat.argument.arguments)
         const params = []
@@ -229,13 +283,16 @@ function ParserCode(name) {
         }
         // console.log(params)
         // console.log(typeId)
-        meta.push({
-          name: varName,
+        const name = typeId[0] === undefined ? params[0] : typeId[0]
+        nodes.push({
+          id: effect === 'call' ? name : effect === 'put' ? effectFunction : null,
+          name: effect === 'call' ? name : effect === 'put' ? effectFunction : null,
+          functionName: effectFunction,
           effect,
           type,
           params: params.length === 0 ? null : params,
-          point_to: typeId[0] === undefined ? null : typeId[0],
-          path: name
+          point_to: typeId[0] === undefined ? null : effect === 'take' ? varName : typeId[0],
+          path: filePath
         })
         // console.log('----')
       })
@@ -243,12 +300,62 @@ function ParserCode(name) {
   })
 
   // console.log(meta)
-  return meta
+  return nodes
 }
 
+function createMetaObject() {
+  // Create Object to Nodes and Links format
+  meta.nodes = nodes
+  meta.nodes.map((node) => {
+    if (node.name === null || node.point_to === null) return;
+    links.push({
+      source: node.id,
+      target: node.point_to
+    })
+  })
+  meta.links = links
+}
+
+function ParserAction(file) {
+  // console.log(file)
+  const filePath = path.resolve(__dirname, file)
+  const content = fs.readFileSync(filePath).toString()
+  const f = flow.parse(content, {})
+  const body = f.body[f.body.length - 1].declaration.declarations[0]
+  const name = body.id.name
+  const body_actions = body.init.properties
+  const action_id = name.replace('Actions', '')
+  // console.log(body_actions)
+  body_actions.map((d) => {
+    nodes.push({
+      id: `${action_id}/${d.key.name.split(/(?=[A-Z])/).join('_').toUpperCase()}`,
+      name: d.key.name,
+      effect: null,
+      type: 'action',
+      params: null,
+      point_to: null,
+      path: filePath
+    })
+  })
+}
+
+function collectEffect(name) {
+  const { effects, actions } = name
+  clearMeta()
+  effects.map(d => {
+    ParserEffect(d)
+  })
+  actions.map(d => {
+    ParserAction(d)
+  })
+  createMetaObject()
+  // console.log('347', meta)
+}
 
 module.exports = {
-  ParserCode,
+  collectEffect,
+  // ParserAction,
+  // ParserEffect,
   isIndexFile,
   meta,
   clearMeta,

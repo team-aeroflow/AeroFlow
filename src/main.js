@@ -78,10 +78,10 @@ ipcMain.once('read-file', (event, arg) => {
 })
 
 ipcMain.on('watch-file', (event, arg) => {
-  console.log('arg', arg)
+  // console.log('arg', arg.effects)
   let self = this
   const p = arg.path
-  console.log('p', p)
+  // console.log('p', p)
   watch(p, { recursive: true }, (evt, name) => {
     const tree = self.getFileList(p)
     console.log(evt, name)
@@ -95,19 +95,29 @@ ipcMain.on('watch-file', (event, arg) => {
     }
 
     const effectPath = arg.effect_path
+    const actionPath = arg.action_path
+
     if (name.match(/(\w+)\/src\/state\/(\w+)\/effects\/(\w+)\.js/) && !utils.isInArray(name, effectPath)) {
       effectPath.push(name)
+    } else if (name.match(/(\w+)\/src\/state\/(\w+)\/actions\/(\w+)\.js/) && !utils.isInArray(name, actionPath)) {
+      actionPath.push(name)
     }
     // console.log(effectPath)
     if (code === 'file delete') {
+      // TODO: fix bug if delete action
       utils.removeItem(name, effectPath)
     }
     // console.log(effectPath)
     utils.clearMeta()
-    effectPath.map((name) => {
-      utils.ParserCode(path.resolve(name))
-    })
-    console.log(utils.meta)
+    const n = {}
+    n.effects = effectPath
+    n.actions = actionPath
+    // console.log(n)
+    utils.collectEffect(n)
+    // effectPath.map((name) => {
+    //   utils.collectEffect(path.resolve(name))
+    // })
+    console.log('117', utils.meta)
 
     event.sender.send('watch-file-response', {
       code,
@@ -151,16 +161,25 @@ ipcMain.on('create-project', (event, arg) => {
     const meta = this.readFileFromUser(metaPath, 'meta.json')
 
     const effectPath = []
+    const actionPath = []
+
     utils.clearMeta()
     tree.map((t) => {
       if (t.match(/src\/state\/(\w+)\/effects\/(\w+)\.js/)) {
         effectPath.push(`${getPath}/${t}`)
+      } else if (t.match(/src\/state\/(\w+)\/actions\/(\w+)\.js/)) {
+        actionPath.push(`${getPath}/${t}`)
       }
     })
+    const n = {}
+    n.effects = effectPath
+    n.actions = actionPath
+    utils.collectEffect(n)
+    // effectPath.map((name) => {
+    //   utils.collectEffect(path.resolve(name))
+    // })
 
-    effectPath.map((name) => {
-      utils.ParserCode(path.resolve(name))
-    })
+    // TODO: FIX BUG : effects: utils.meta
     event.sender.send('create-project-response', {
       success: true
     })
@@ -169,6 +188,7 @@ ipcMain.on('create-project', (event, arg) => {
       meta,
       path: message,
       effect_path: effectPath,
+      action_path: actionPath,
       effects: utils.meta
     })
   })
@@ -187,17 +207,27 @@ ipcMain.on('open-project', (event, arg) => {
   }
   const meta = this.readFileFromUser(metaPath, 'meta.json')
   const effectPath = []
+  const actionPath = []
+
   utils.clearMeta()
   tree.map((t) => {
     if (t.match(/src\/state\/(\w+)\/effects\/(\w+)\.js/)) {
       effectPath.push(`${getPath}/${t}`)
+    } else if (t.match(/src\/state\/(\w+)\/actions\/(\w+)\.js/)) {
+      actionPath.push(`${getPath}/${t}`)
     }
   })
+  const n = {}
+  n.effects = effectPath
+  n.actions = actionPath
 
-  effectPath.map((name) => {
-    utils.ParserCode(path.resolve(name))
-  })
+  utils.collectEffect(n)
+  // console.log('UUU', utils.meta)
+  // effectPath.map((name) => {
+  //   utils.collectEffect(path.resolve(name))
+  // })
 
+  // TODO: FIX BUG : effects: utils.meta
   event.sender.send('open-project-response', {
     success: true
   })
@@ -206,6 +236,7 @@ ipcMain.on('open-project', (event, arg) => {
     meta,
     path: getPath,
     effect_path: effectPath,
+    action_path: actionPath,
     effects: utils.meta
   })
 })

@@ -68,19 +68,19 @@ class Dashboard extends React.Component {
           //   )
           // })
 
-          effects.map((data, i) => {
-            // console.log(data.name)
-            return (
-              <div key={`${i}`} style={{ margin: '10px', backgroundColor: 'red' }}>
-                <p>Name : {data.name === null ? 'null' : data.name} </p>
-                <p>Effect type : {data.effect}</p>
-                <p>Params : {[data.params].map((d, i) => {
-                  return (<span key={i}>{d} </span>)
-                })}</p>
-                <p>Point to{data.point_to === null ? 'null' : data.point_to}</p>
-              </div>
-            )
-          })
+          // effects.map((data, i) => {
+          //   // console.log(data.name)
+          //   return (
+          //     <div key={`${i}`} style={{ margin: '10px', backgroundColor: 'red' }}>
+          //       <p>Name : {data.name === null ? 'null' : data.name} </p>
+          //       <p>Effect type : {data.effect}</p>
+          //       <p>Params : {[data.params].map((d, i) => {
+          //         return (<span key={i}>{d} </span>)
+          //       })}</p>
+          //       <p>Point to{data.point_to === null ? 'null' : data.point_to}</p>
+          //     </div>
+          //   )
+          // })
         }
       </div>
     )
