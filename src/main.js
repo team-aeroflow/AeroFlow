@@ -114,9 +114,7 @@ ipcMain.on('watch-file', (event, arg) => {
     n.actions = actionPath
     // console.log(n)
     utils.collectEffect(n)
-    // effectPath.map((name) => {
-    //   utils.collectEffect(path.resolve(name))
-    // })
+
     console.log('117', utils.meta)
 
     event.sender.send('watch-file-response', {

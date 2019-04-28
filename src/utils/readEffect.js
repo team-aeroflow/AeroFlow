@@ -2,13 +2,13 @@ const fs = require('fs')
 const path = require('path')
 const flow = require('flow-parser')
 
-function isIndexFile(str, target) {
-  return str.substr(-(target.length)) === target
-}
-
 const meta = {}
 const nodes = []
 const links = []
+
+function isIndexFile(str, target) {
+  return str.substr(-(target.length)) === target
+}
 
 function removeItem(value, array) {
   for (let i in array) {
@@ -24,17 +24,14 @@ function isInArray(value, array) {
 }
 
 function clearMeta() {
-  // console.log('27', meta)
-  for(let datum in meta) {
+  for (let datum in meta) {
     delete meta[datum]
   }
-  // console.log(31, meta)
   nodes.length = 0
   links.length = 0
 }
 
 function ParserEffect(name) {
-  // console.log('meta', meta)
   const filePath = path.resolve(name)
   const content = fs.readFileSync(filePath).toString()
 
@@ -49,7 +46,6 @@ function ParserEffect(name) {
   const toJSON = f.body[f.body.length - 1].declaration.body.body[0].body
   const effectFunction = f.body[f.body.length - 1].declaration.id.name
   const body = toJSON.body
-  // const meta = []
 
   body.map((d, i) => {
     // console.log(d.type)
@@ -317,7 +313,6 @@ function createMetaObject() {
 }
 
 function ParserAction(file) {
-  // console.log(file)
   const filePath = path.resolve(__dirname, file)
   const content = fs.readFileSync(filePath).toString()
   const f = flow.parse(content, {})
@@ -325,7 +320,7 @@ function ParserAction(file) {
   const name = body.id.name
   const body_actions = body.init.properties
   const action_id = name.replace('Actions', '')
-  // console.log(body_actions)
+
   body_actions.map((d) => {
     nodes.push({
       id: `${action_id}/${d.key.name.split(/(?=[A-Z])/).join('_').toUpperCase()}`,
@@ -349,7 +344,6 @@ function collectEffect(name) {
     ParserAction(d)
   })
   createMetaObject()
-  // console.log('347', meta)
 }
 
 module.exports = {
