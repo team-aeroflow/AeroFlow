@@ -1,5 +1,4 @@
 [ignore]
-.*/node_modules/@tanawat/.*
 
 [include]
 
@@ -10,3 +9,6 @@
 [options]
 
 [strict]
+
+[version]
+0.98.0

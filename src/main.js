@@ -1,3 +1,5 @@
+// @flow
+
 const electron = require('electron')
 const app = electron.app
 const BrowserWindow = electron.BrowserWindow
@@ -13,29 +15,12 @@ const flow = require('flow-parser')
 const execSync = require('child_process').execSync
 const { fork, spawn } = require('child_process')
 const utils = require('./utils/readEffect')
+const handleFile = require('./utils/handleFile')
+const readMeta = require('./utils/readMeta')
 
 let mainWindow
 
-filterDirectory = (_path, fileList) => {
-  const arrFile = []
-  fileList.map((data, i) => {
-    if (!fs.lstatSync(`${_path}/${data}`).isDirectory()) {
-      arrFile.push(data)
-    }
-  })
-  return arrFile
-}
-
-exports.getFileList = (path) => {
-  if (!fs.existsSync(`${path}/src`)) {
-    console.log('No such file or directory')
-    return;
-  }
-  const fileList = execSync(`cd ${path} && find src`, { encoding: 'utf-8' })
-  return filterDirectory(path, fileList.toString().split('\n').slice(0, -1))
-}
-
-exports.getDirectoryPath = () => {
+exports.openProject = () => {
   const directory = dialog.showOpenDialog(mainWindow, {
     properties: ['openDirectory']
   })
@@ -46,11 +31,11 @@ exports.getDirectoryPath = () => {
 }
 
 exports.createProject = (name) => {
-  const path = this.getDirectoryPath()
+  const path = this.openProject()
   if (path === undefined) {
     return
   }
-  const process = fork(`${__dirname}/worker.js`)
+  const process = fork(`${__dirname}/utils/worker.js`)
   // send to forked process
   process.send({
     path,
@@ -62,18 +47,12 @@ exports.createProject = (name) => {
   })
 }
 
-exports.readFileFromUser = (_path, fileName) => {
-  const filePath = path.resolve(_path, `${fileName}`)
-  const code = fs.readFileSync(filePath).toString()
-  return code
-}
-
-ipcMain.once('read-file', (event, arg) => {
-  // console.log('arg', arg)
+ipcMain.on('read-file', (event, arg) => {
   if (fs.lstatSync(arg).isDirectory()) {
     return;
   }
   const code = fs.readFileSync(arg).toString()
+  console.log(code)
   event.sender.send('read-file-click', code)
 })
 
@@ -83,8 +62,13 @@ ipcMain.on('watch-file', (event, arg) => {
   const p = arg.path
   // console.log('p', p)
   watch(p, { recursive: true }, (evt, name) => {
-    const tree = self.getFileList(p)
+    const metaPath = `${p}/src/state/__state__/`
+    const meta = handleFile.readFileFromUser(metaPath, 'meta.json')
+    const countMeta = readMeta.countProperty(meta)
+    console.log(68, countMeta)
+    const tree = handleFile.getFileList(p)
     console.log(evt, name)
+
     let code = ''
     if (fs.existsSync(name)) {
       if (!fs.lstatSync(name).isDirectory()) {
@@ -97,26 +81,25 @@ ipcMain.on('watch-file', (event, arg) => {
     const effectPath = arg.effect_path
     const actionPath = arg.action_path
 
-    if (name.match(/(\w+)\/src\/state\/(\w+)\/effects\/(\w+)\.js/) && !utils.isInArray(name, effectPath)) {
+    const effectRegx = /(\w+)\/src\/state\/(\w+)\/effects\/(\w+)\.js/
+    const actionsRegx = /(\w+)\/src\/state\/(\w+)\/actions\/index\.js/
+    if (name.match(effectRegx) && !utils.isInArray(name, effectPath)) {
       effectPath.push(name)
-    } else if (name.match(/(\w+)\/src\/state\/(\w+)\/actions\/(\w+)\.js/) && !utils.isInArray(name, actionPath)) {
+    } else if (name.match(actionsRegx) && !utils.isInArray(name, actionPath)) {
       actionPath.push(name)
     }
-    // console.log(effectPath)
+
     if (code === 'file delete') {
       // TODO: fix bug if delete action
       utils.removeItem(name, effectPath)
     }
-    // console.log(effectPath)
     utils.clearMeta()
     const n = {}
     n.effects = effectPath
     n.actions = actionPath
-    // console.log(n)
     utils.collectEffect(n)
 
-    console.log('117', utils.meta)
-
+    // console.log('117', utils.meta)
     event.sender.send('watch-file-response', {
       code,
       path: p,
@@ -127,7 +110,7 @@ ipcMain.on('watch-file', (event, arg) => {
 })
 
 ipcMain.on('update-dashboard', (event, arg) => {
-  const lists = this.getFileList(arg)
+  const lists = handleFile.getFileList(arg)
   if (arg === null || lists === undefined) {
     return
   }
@@ -141,11 +124,11 @@ ipcMain.on('update-dashboard', (event, arg) => {
 
 
 ipcMain.on('create-project', (event, arg) => {
-  const getPath = this.getDirectoryPath()
+  const getPath = this.openProject()
   if (getPath === undefined) {
     return
   }
-  const process = fork(`${__dirname}/worker.js`)
+  const process = fork(`${__dirname}/utils/worker.js`)
   // send to forked process
   process.send({
     path: getPath,
@@ -154,21 +137,24 @@ ipcMain.on('create-project', (event, arg) => {
   // listen for messages from forked process
   process.on('message', (message) => {
     console.log('message from fork', message) // path, name
-    const tree = this.getFileList(message)
+    const tree = handleFile.getFileList(message)
     const metaPath = `${message}/src/state/__state__/`
-    const meta = this.readFileFromUser(metaPath, 'meta.json')
-
+    const meta = handleFile.readFileFromUser(metaPath, 'meta.json')
     const effectPath = []
     const actionPath = []
 
     utils.clearMeta()
+
+    const effectRegx = /(\w+)\/src\/state\/(\w+)\/effects\/(\w+)\.js/
+    const actionsRegx = /(\w+)\/src\/state\/(\w+)\/actions\/index\.js/
     tree.map((t) => {
-      if (t.match(/src\/state\/(\w+)\/effects\/(\w+)\.js/)) {
+      if (t.match(effectRegx)) {
         effectPath.push(`${getPath}/${t}`)
-      } else if (t.match(/src\/state\/(\w+)\/actions\/(\w+)\.js/)) {
+      } else if (t.match(actionsRegx)) {
         actionPath.push(`${getPath}/${t}`)
       }
     })
+
     const n = {}
     n.effects = effectPath
     n.actions = actionPath
@@ -193,8 +179,9 @@ ipcMain.on('create-project', (event, arg) => {
 })
 
 ipcMain.on('open-project', (event, arg) => {
-  const getPath = this.getDirectoryPath()
-  const tree = this.getFileList(getPath)
+  // const getPath = this.openProject()
+  const getPath = '/Users/peerasorn/Desktop/finalproject'
+  const tree = handleFile.getFileList(getPath)
   const metaPath = `${getPath}/src/state/__state__/`
   if (tree === undefined || !fs.existsSync(metaPath)) {
     // console.log('No such file or directory')
@@ -203,15 +190,19 @@ ipcMain.on('open-project', (event, arg) => {
     })
     return;
   }
-  const meta = this.readFileFromUser(metaPath, 'meta.json')
+  const meta = handleFile.readFileFromUser(metaPath, 'meta.json')
+  const countMeta = readMeta.countProperty(meta)
   const effectPath = []
   const actionPath = []
-
+  console.log(meta)
+  console.log(196, countMeta)
   utils.clearMeta()
+  const effectRegx = /src\/state\/(\w+)\/effects\/(\w+)\.js/
+  const actionsRegx = /src\/state\/(\w+)\/actions\/index\.js/
   tree.map((t) => {
-    if (t.match(/src\/state\/(\w+)\/effects\/(\w+)\.js/)) {
+    if (t.match(effectRegx)) {
       effectPath.push(`${getPath}/${t}`)
-    } else if (t.match(/src\/state\/(\w+)\/actions\/(\w+)\.js/)) {
+    } else if (t.match(actionsRegx)) {
       actionPath.push(`${getPath}/${t}`)
     }
   })
@@ -220,10 +211,6 @@ ipcMain.on('open-project', (event, arg) => {
   n.actions = actionPath
 
   utils.collectEffect(n)
-  // console.log('UUU', utils.meta)
-  // effectPath.map((name) => {
-  //   utils.collectEffect(path.resolve(name))
-  // })
 
   // TODO: FIX BUG : effects: utils.meta
   event.sender.send('open-project-response', {
@@ -244,8 +231,8 @@ function createWindow() {
     webPreferences: {
       nodeIntegrationInWorker: true
     },
-    width: 800,
-    height: 600
+    width: 1200,
+    height: 800
   })
   mainWindow.loadURL('http://localhost:3000')
   mainWindow.webContents.openDevTools()

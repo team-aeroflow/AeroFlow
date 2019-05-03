@@ -1,7 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { dashboardActions } from '../../state/dashboard/actions'
-import { prev } from 'locutus/php/array';
+import StateSection from './StateSection'
+import GraphSection from './GraphSection'
+import './Dashboard.css'
 
 const electron = window.require('electron')
 const ipcRenderer = electron.ipcRenderer
@@ -12,7 +14,8 @@ class Dashboard extends React.Component {
     this.state = {
       button: [],
       path: '',
-      effects: []
+      effects: [],
+      point_to: []
     }
   }
 
@@ -25,7 +28,8 @@ class Dashboard extends React.Component {
           ...prevState,
           path,
           button: tree,
-          effects
+          effects: effects.nodes,
+          point_to: effects.links
         }
       })
     }
@@ -39,7 +43,9 @@ class Dashboard extends React.Component {
           ...prevState,
           path: arg.path,
           button: arg.tree,
-          effects: arg.effects
+          effects: arg.effects,
+          effects: arg.effects.nodes,
+          point_to: arg.effects.links
         }
       })
     })
@@ -47,41 +53,25 @@ class Dashboard extends React.Component {
 
   onCodeClick(source) {
     const { path } = this.state
-    ipcRenderer.send('read-file', `${path}/${source}`)
-    ipcRenderer.on('read-file-click', (event, arg) => {
+    console.log(source)
+    // ipcRenderer.send('read-file', `${path}/${source}`)
+    ipcRenderer.send('read-file', source)
+    ipcRenderer.once('read-file-click', (event, arg) => {
       console.log(arg)
     })
   }
 
   render() {
-    const { path, button, effects } = this.state
-    return (
-      <div>
-        DASHBOARD
-        <span style={{ display: 'block', fontSize: '14px' }}>PATH: {path}</span>
-        {
-          // button.map((data, i) => {
-          //   return (
-          //     <div key={`${data}_${i}`}>
-          //       <button key={data} onClick={this.onCodeClick.bind(this, data)}>{data}</button>
-          //     </div>
-          //   )
-          // })
+    const { path, button, effects, point_to } = this.state
 
-          // effects.map((data, i) => {
-          //   // console.log(data.name)
-          //   return (
-          //     <div key={`${i}`} style={{ margin: '10px', backgroundColor: 'red' }}>
-          //       <p>Name : {data.name === null ? 'null' : data.name} </p>
-          //       <p>Effect type : {data.effect}</p>
-          //       <p>Params : {[data.params].map((d, i) => {
-          //         return (<span key={i}>{d} </span>)
-          //       })}</p>
-          //       <p>Point to{data.point_to === null ? 'null' : data.point_to}</p>
-          //     </div>
-          //   )
-          // })
-        }
+    return (
+      <div className="dashboard">
+        <StateSection />
+        <GraphSection path={path}
+          button={button}
+          effects={effects}
+          point_to={point_to}
+        />
       </div>
     )
   }

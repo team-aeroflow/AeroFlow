@@ -280,6 +280,10 @@ function ParserEffect(name) {
         // console.log(params)
         // console.log(typeId)
         const name = typeId[0] === undefined ? params[0] : typeId[0]
+        let point_to = typeId[0] === undefined ? null : effect === 'take' ? varName : typeId[0]
+        if (point_to === 'router/NAVIGATE_TO') {
+          point_to = params[0]
+        }
         nodes.push({
           id: effect === 'call' ? name : effect === 'put' ? effectFunction : null,
           name: effect === 'call' ? name : effect === 'put' ? effectFunction : null,
@@ -287,7 +291,7 @@ function ParserEffect(name) {
           effect,
           type,
           params: params.length === 0 ? null : params,
-          point_to: typeId[0] === undefined ? null : effect === 'take' ? varName : typeId[0],
+          point_to,
           path: filePath
         })
         // console.log('----')
