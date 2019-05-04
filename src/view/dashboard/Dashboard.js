@@ -12,21 +12,23 @@ class Dashboard extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      countMeta: {},
       button: [],
-      path: '',
+      projectPath: '',
       effects: [],
       point_to: []
     }
   }
 
   componentWillReceiveProps(props) {
-    const { meta, path, tree, effects } = props
+    const { meta, countMeta, projectPath, tree, effects } = props
     if (this.props !== props) {
       console.log('props', props)
       this.setState(prevState => {
         return {
           ...prevState,
-          path,
+          countMeta,
+          projectPath,
           button: tree,
           effects: effects.nodes,
           point_to: effects.links
@@ -41,7 +43,8 @@ class Dashboard extends React.Component {
       this.setState(prevState => {
         return {
           ...prevState,
-          path: arg.path,
+          projectPath: arg.projectPath,
+          countMeta: arg.countMeta,
           button: arg.tree,
           effects: arg.effects,
           effects: arg.effects.nodes,
@@ -52,7 +55,7 @@ class Dashboard extends React.Component {
   }
 
   onCodeClick(source) {
-    const { path } = this.state
+    const { projectPath } = this.state
     console.log(source)
     // ipcRenderer.send('read-file', `${path}/${source}`)
     ipcRenderer.send('read-file', source)
@@ -62,12 +65,12 @@ class Dashboard extends React.Component {
   }
 
   render() {
-    const { path, button, effects, point_to } = this.state
-
+    const { projectPath, countMeta, button, effects, point_to } = this.state
+    console.log(projectPath)
     return (
       <div className="dashboard">
-        <StateSection />
-        <GraphSection path={path}
+        <StateSection countMeta={countMeta} />
+        <GraphSection projectPath={projectPath}
           button={button}
           effects={effects}
           point_to={point_to}
@@ -78,10 +81,11 @@ class Dashboard extends React.Component {
 }
 
 function mapStateToProps(state) {
-  const { meta, path, tree, effects, effect_path } = state.dashboard
+  const { meta, countMeta, projectPath, tree, effects, effect_path } = state.dashboard
   return {
     meta,
-    path,
+    countMeta,
+    projectPath,
     tree,
     effects,
     effect_path

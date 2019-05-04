@@ -59,7 +59,7 @@ ipcMain.on('read-file', (event, arg) => {
 ipcMain.on('watch-file', (event, arg) => {
   // console.log('arg', arg.effects)
   let self = this
-  const p = arg.path
+  const p = arg.projectPath
   // console.log('p', p)
   watch(p, { recursive: true }, (evt, name) => {
     const metaPath = `${p}/src/state/__state__/`
@@ -101,8 +101,10 @@ ipcMain.on('watch-file', (event, arg) => {
 
     // console.log('117', utils.meta)
     event.sender.send('watch-file-response', {
+      meta,
+      countMeta,
       code,
-      path: p,
+      projectPath: p,
       tree,
       effects: utils.meta
     })
@@ -219,7 +221,8 @@ ipcMain.on('open-project', (event, arg) => {
   event.sender.send('on-dashboard', {
     tree,
     meta,
-    path: getPath,
+    countMeta,
+    projectPath: getPath,
     effect_path: effectPath,
     action_path: actionPath,
     effects: utils.meta

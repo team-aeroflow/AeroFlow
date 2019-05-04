@@ -17,7 +17,7 @@ class GraphSection extends React.Component {
 
   render() {
     const {
-      path,
+      projectPath,
       button,
       effects,
       point_to
@@ -34,7 +34,7 @@ class GraphSection extends React.Component {
     return (
       <div>
         Dashboard
-        <span style={{ display: 'block', fontSize: '14px' }}>PATH: {path}</span>
+        <span style={{ display: 'block', fontSize: '14px' }}>PATH: {projectPath}</span>
         {
           effects.map((data, i) => {
             return (
