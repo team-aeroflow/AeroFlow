@@ -1,7 +1,33 @@
 .state-section {
-  background-color: red;
+  background-color: #0b668d;
   width: 30vw;
-  height: 100vh;
+  height: 100%;
+  /* overflow: auto; */
+}
+
+.state-section .state-info {
+  background-color: lightcoral;
+  height: 90vh;
   overflow: auto;
+}
+
+.add-state-block {
+  /* display: fixed; */
+  background-color: red;
+}
+
+.add-state-block #add-state {
+  padding: 20px 0px 20px 20px;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.state-block .dot {
+  height: 25px;
+  width: 25px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
 }
 
