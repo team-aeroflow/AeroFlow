@@ -4,7 +4,9 @@
 // @flow
 
 import {setDashboard} from './setDashboard'
+import {createState} from './createState'
 
 export const dashboardActions = {
   setDashboard,
+  createState,
 }

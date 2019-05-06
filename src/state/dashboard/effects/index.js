@@ -4,7 +4,9 @@
 // @flow
 
 import {enterDashboardEffect} from './enterDashboard'
+import {createStateEffect} from './createState'
 
 export const dashboardEffects = [
   enterDashboardEffect,
+  createStateEffect,
 ]

@@ -1,6 +1,7 @@
 .state-section {
   background-color: #0b668d;
-  width: 30vw;
+  min-width: 250px;
+  width: 20vw;
   height: 100%;
   /* overflow: auto; */
 }
@@ -14,13 +15,23 @@
 .add-state-block {
   /* display: fixed; */
   background-color: red;
+  text-align: center;
+
 }
 
 .add-state-block #add-state {
-  padding: 20px 0px 20px 20px;
+  /* padding: 20px 0px 20px 20px; */
   width: 100%;
   height: 100%;
   cursor: pointer;
+  /* text-align: center; */
+}
+
+.state-block {
+  margin: 15px;
+  padding: 15px;
+  border-radius: 10px;
+  background-color: rgb(202, 102, 102);
 }
 
 .state-block .dot {
@@ -31,3 +42,18 @@
   display: inline-block;
 }
 
+#dot-action {
+  background-color: red;
+}
+
+#dot-channel {
+  background-color: yellow;
+}
+
+#dot-effect {
+  background-color: green;
+}
+
+#dot-reducer {
+  background-color: blue;
+}

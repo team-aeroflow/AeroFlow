@@ -1,11 +1,33 @@
 import React from 'react'
+import Button from 'react-bootstrap/Button';
+// import { Button } from 'react-bootstrap'
 import './StateSection.css'
+import OpenModal from './OpenModal'
 
 class StateSection extends React.Component {
-  
-  render() {
-    const { countMeta } = this.props
+  constructor(props) {
+    super(props)
+    this.state = {
+      isModalShow: false,
+    }
+  }
 
+  handleShow() {
+    this.setState({
+      isModalShow: true
+    })
+  }
+
+  handleClose() {
+    this.setState({
+      isModalShow: false
+    })
+  }
+  
+
+  render() {
+    const { isModalShow } = this.state
+    const { countMeta } = this.props
     return (
       <div className="state-section">
         <div className="state-info">
@@ -15,19 +37,19 @@ class StateSection extends React.Component {
                 <div key={i} className="state-block">
                   <h3>State : {key}</h3>
                   <p>
-                    <span className="dot" style={{ backgroundColor: 'red' }}></span>
+                    <span className="dot" id="dot-action"></span>
                     Actions {countMeta[key].actions}
                   </p>
                   <p>
-                    <span className="dot" style={{ backgroundColor: 'yellow' }}></span>
+                    <span className="dot" id="dot-channel"></span>
                     Channels {countMeta[key].channels}
                   </p>
                   <p>
-                    <span className="dot" style={{ backgroundColor: 'green' }}></span>
+                    <span className="dot" id="dot-effect"></span>
                     Effects {countMeta[key].effects}
                   </p>
                   <p>
-                    <span className="dot" style={{ backgroundColor: 'blue' }}></span>
+                    <span className="dot" id="dot-reducer"></span>
                     Reducers {countMeta[key].reducers}
                   </p>
                 </div>
@@ -36,7 +58,14 @@ class StateSection extends React.Component {
           }
         </div>
         <div className="add-state-block">
-          <div id="add-state"> + Add States</div>
+          <button id="add-state"
+            onClick={this.handleShow.bind(this)}
+          >
+            + Add States
+          </button>
+          <OpenModal isModalShow={isModalShow}
+            handleClose={this.handleClose.bind(this)}
+          />
         </div>
       </div>
     )

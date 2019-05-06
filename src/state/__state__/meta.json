@@ -36,12 +36,20 @@
           "flowType": "SetDashboard",
           "id": "dashboard/SET_DASHBOARD",
           "reducer": true
+        },
+        "createState": {
+          "name": "createState",
+          "flowType": "CreateState",
+          "id": "dashboard/CREATE_STATE"
         }
       },
       "channels": {},
       "effects": {
         "enterDashboard": {
           "name": "enterDashboard"
+        },
+        "createState": {
+          "name": "createState"
         }
       },
       "reducers": {}
