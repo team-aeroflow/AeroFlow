@@ -56,16 +56,16 @@ ipcMain.on('read-file', (event, arg) => {
   event.sender.send('read-file-click', code)
 })
 
-ipcMain.on('watch-file', (event, arg) => {
+ipcMain.once('watch-file', (event, arg) => {
   // console.log('arg', arg.effects)
   let self = this
   const p = arg.projectPath
-  // console.log('p', p)
+
   watch(p, { recursive: true }, (evt, name) => {
     const metaPath = `${p}/src/state/__state__/`
     const meta = handleFile.readFileFromUser(metaPath, 'meta.json')
     const countMeta = readMeta.countProperty(meta)
-    console.log(68, countMeta)
+    // console.log(68, countMeta)
     const tree = handleFile.getFileList(p)
     console.log(evt, name)
 
@@ -100,6 +100,7 @@ ipcMain.on('watch-file', (event, arg) => {
     utils.collectEffect(n)
 
     // console.log('117', utils.meta)
+    console.log(103103)
     event.sender.send('watch-file-response', {
       meta,
       countMeta,
@@ -111,18 +112,18 @@ ipcMain.on('watch-file', (event, arg) => {
   })
 })
 
-ipcMain.on('update-dashboard', (event, arg) => {
-  const lists = handleFile.getFileList(arg)
-  if (arg === null || lists === undefined) {
-    return
-  }
-  console.log('ARG', arg)
-  console.log('LIST', lists)
-  event.sender.send('on-dashboard', {
-    tree: lists,
-    path: arg
-  })
-})
+// ipcMain.on('update-dashboard', (event, arg) => {
+//   const lists = handleFile.getFileList(arg)
+//   if (arg === null || lists === undefined) {
+//     return
+//   }
+//   console.log('ARG', arg)
+//   console.log('LIST', lists)
+//   event.sender.send('on-dashboard', {
+//     tree: lists,
+//     path: arg
+//   })
+// })
 
 
 ipcMain.on('create-project', (event, arg) => {
@@ -196,8 +197,8 @@ ipcMain.on('open-project', (event, arg) => {
   const countMeta = readMeta.countProperty(meta)
   const effectPath = []
   const actionPath = []
-  console.log(meta)
-  console.log(196, countMeta)
+  // console.log(meta)
+  // console.log(196, countMeta)
   utils.clearMeta()
   const effectRegx = /src\/state\/(\w+)\/effects\/(\w+)\.js/
   const actionsRegx = /src\/state\/(\w+)\/actions\/index\.js/

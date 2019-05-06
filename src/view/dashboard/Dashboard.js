@@ -20,56 +20,51 @@ class Dashboard extends React.Component {
     }
   }
 
-  componentWillReceiveProps(props) {
+  static getDerivedStateFromProps(props, state) {
     const { meta, countMeta, projectPath, tree, effects } = props
-    if (this.props !== props) {
-      console.log('props', props)
-      this.setState(prevState => {
-        return {
-          ...prevState,
-          countMeta,
-          projectPath,
-          button: tree,
-          effects: effects.nodes,
-          point_to: effects.links
-        }
-      })
+    if (state !== props && effects !== undefined ) {
+      return {
+        ...state,
+        countMeta,
+        projectPath,
+        button: tree,
+        effects: effects.nodes,
+        point_to: effects.links
+      }
+    } else {
+      return state
     }
   }
 
-  componentDidUpdate() {
-    ipcRenderer.once('watch-file-response', (event, arg) => {
-      console.log(arg)
-      this.setState(prevState => {
-        return {
-          ...prevState,
-          projectPath: arg.projectPath,
-          countMeta: arg.countMeta,
-          button: arg.tree,
-          effects: arg.effects,
-          effects: arg.effects.nodes,
-          point_to: arg.effects.links
-        }
-      })
-    })
-  }
+  // componentWillReceiveProps(props) {
+  //   const { meta, countMeta, projectPath, tree, effects } = props
+  //   if (this.props !== props) {
+  //     this.setState(prevState => {
+  //       return {
+  //         ...prevState,
+  //         countMeta,
+  //         projectPath,
+  //         button: tree,
+  //         effects: effects.nodes,
+  //         point_to: effects.links
+  //       }
+  //     })
+  //   }
+  // }
 
-  onCodeClick(source) {
-    const { projectPath } = this.state
-    console.log(source)
-    // ipcRenderer.send('read-file', `${path}/${source}`)
-    ipcRenderer.send('read-file', source)
-    ipcRenderer.once('read-file-click', (event, arg) => {
-      console.log(arg)
+  componentDidUpdate() {
+    const { setDashboard } = this.props
+    ipcRenderer.once('watch-file-response', (event, arg) => {
+      setDashboard(arg)
     })
   }
 
   render() {
-    const { projectPath, countMeta, button, effects, point_to } = this.state
-    console.log(projectPath)
+    const { projectPath, button, effects, point_to } = this.state
+
     return (
       <div className="dashboard">
-        <StateSection countMeta={countMeta} />
+        <StateSection />
         <GraphSection projectPath={projectPath}
           button={button}
           effects={effects}
@@ -94,9 +89,9 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    // setDashboard: (a) => {
-    //   dispatch(dashboardActions.setDashboard(a))
-    // }
+    setDashboard: (payload) => {
+      dispatch(dashboardActions.setDashboard(payload))
+    }
   }
 }
 
