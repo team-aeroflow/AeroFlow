@@ -7,7 +7,7 @@ export type CreateProjectPayload = {
 
 const id = 'home/CREATE_PROJECT'
 
-export const createProject = (projectName): Action<CreateProjectPayload> => ({
+export const createProject = (projectName: string): Action<CreateProjectPayload> => ({
   type: id,
   payload: {
     // TODO: Add payload content

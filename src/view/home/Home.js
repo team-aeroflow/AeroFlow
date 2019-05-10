@@ -1,28 +1,37 @@
+// @flow
 import React from 'react'
 import './Home.css'
 import CreateProject from './CreateProject'
 import { connect } from 'react-redux'
 import { homeActions } from '../../state/home/actions'
 
-class Home extends React.Component {
+type State = {
+  showDialog: boolean,
+  isProject: boolean,
+}
+
+type Props = {
+  openProject: () => void,
+}
+
+class Home extends React.Component<Props, State> {
   constructor(props) {
     super(props)
     this.state = {
       showDialog: false,
       isProject: true,
     }
-    this.keydownHandler = this.keydownHandler.bind(this)
   }
 
   componentDidMount() {
     // อย่าลืมเอาออก
     this.props.openProject()
 
-    document.addEventListener('keydown', this.keydownHandler, false)
+    document.addEventListener('keydown', this.keydownHandler.bind(this), false)
   }
 
   componentWillUnmount() {
-    document.removeEventListener('keydown', this.keydownHandler, false)
+    document.removeEventListener('keydown', this.keydownHandler.bind(this), false)
   }
 
   keydownHandler(e) {
@@ -43,20 +52,6 @@ class Home extends React.Component {
 
   onOpenExistProjectClick() {
     this.props.openProject()
-    // ipcRenderer.on('open-project-response', (event, arg) => {
-    //   const { success } = arg
-    //   if (!success) {
-    //     console.log('This project not support')
-    //     this.setState(prevState => {
-    //       return {
-    //         ...prevState,
-    //         isProject: !this.state.isProject
-    //       }
-    //     })
-    //     return;
-    //   }
-    //   router.navigate('dashboard')
-    // })
   }
 
   render() {

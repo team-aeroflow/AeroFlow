@@ -1,12 +1,37 @@
+// @flow
+
 import React from 'react'
 import './GraphSection.css'
 
 const electron = window.require('electron')
 const ipcRenderer = electron.ipcRenderer
 
-class GraphSection extends React.Component {
-  onCodeClick(source) {
-    const { path } = this.props
+type linkType = {
+  source: string,
+  target: string,
+}
+
+type nodeType = {
+  effect: string,
+  functionName: string,
+  id: string,
+  name: string,
+  params: Array<string>,
+  path: string,
+  point_to: string,
+  type: string,
+}
+
+type Props = {
+  projectPath: string,
+  button: Array<string>,
+  effects: Array<nodeType>,  
+  point_to: Array<linkType>,
+}
+
+class GraphSection extends React.Component<Props> {
+  onCodeClick(source: string) {
+    // const { path } = this.props
     console.log(source)
     // ipcRenderer.send('read-file', `${path}/${source}`)
     ipcRenderer.send('read-file', source)

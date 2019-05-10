@@ -1,5 +1,3 @@
-// @flow
-
 const electron = require('electron')
 const app = electron.app
 const BrowserWindow = electron.BrowserWindow
@@ -46,6 +44,16 @@ exports.createProject = (name) => {
     console.log('message from fork', message) // path, name
   })
 }
+
+ipcMain.on('create-state', (event, arg) => {
+  const process = fork(`${__dirname}/utils/createState.js`)
+  process.send({
+    arg
+  })
+  process.on('message', (message) => {
+    console.log('message from fork', message)
+  })
+})
 
 ipcMain.on('read-file', (event, arg) => {
   if (fs.lstatSync(arg).isDirectory()) {
@@ -235,7 +243,7 @@ function createWindow() {
     webPreferences: {
       nodeIntegrationInWorker: true
     },
-    width: 1200,
+    width: 1300,
     height: 800
   })
   mainWindow.loadURL('http://localhost:3000')

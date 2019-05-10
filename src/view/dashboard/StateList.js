@@ -1,7 +1,14 @@
+// @flow
 import React from 'react'
 import { connect } from 'react-redux'
 
-class StateList extends React.Component {
+type Props = {
+  countMeta: Object,
+}
+
+class StateList extends React.Component<Props>{
+
+
   render() {
     const { countMeta } = this.props
 
@@ -11,23 +18,27 @@ class StateList extends React.Component {
           countMeta !== undefined && Object.keys(countMeta).map((key, i) => {
             return (
               <div key={i} className="state-block">
-                <h3>State : {key}</h3>
-                <p>
-                  <span className="dot" id="dot-action"></span>
-                  Actions {countMeta[key].actions}
-                </p>
-                <p>
-                  <span className="dot" id="dot-channel"></span>
-                  Channels {countMeta[key].channels}
-                </p>
-                <p>
-                  <span className="dot" id="dot-effect"></span>
-                  Effects {countMeta[key].effects}
-                </p>
-                <p>
-                  <span className="dot" id="dot-reducer"></span>
-                  Reducers {countMeta[key].reducers}
-                </p>
+                <h3>
+                  State : {key}
+                </h3>
+                <div>
+                  <p>
+                    <span className="dot" id="dot-action"></span>
+                    Actions {countMeta[key].actions}
+                  </p>
+                  <p>
+                    <span className="dot" id="dot-channel"></span>
+                    Channels {countMeta[key].channels}
+                  </p>
+                  <p>
+                    <span className="dot" id="dot-effect"></span>
+                    Effects {countMeta[key].effects}
+                  </p>
+                  <p>
+                    <span className="dot" id="dot-reducer"></span>
+                    Reducers {countMeta[key].reducers}
+                  </p>
+                </div>
               </div>
             )
           })

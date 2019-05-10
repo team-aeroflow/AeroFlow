@@ -1,3 +1,5 @@
+// @flow 
+
 import React from 'react'
 import { connect } from 'react-redux'
 import { dashboardActions } from '../../state/dashboard/actions'
@@ -5,7 +7,18 @@ import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import './OpenModal.css'
 
-class OpenModal extends React.Component {
+type State = {
+  name: string,
+}
+
+type Props = {
+  isModalShow: boolean,
+  handleClose: boolean,
+  handleClose: () => void,
+  createState: (name: string) => void,
+}
+
+class OpenModal extends React.Component<Props, State> {
   constructor(props) {
     super(props)
     this.state = {
@@ -28,7 +41,7 @@ class OpenModal extends React.Component {
 
 
   render() {
-    const { 
+    const {
       isModalShow,
       handleClose,
     } = this.props

@@ -2,21 +2,25 @@
 import type { Action } from '../../../state/types'
 
 export type SetDashboardPayload = {
-  // TODO: Add payload content
+  meta: any,
+  countMeta: Object,
+  projectPath: string,
+  tree: Array<string>,
+  effect_path: Array<string>,
+  effects: Object,
 }
 
 const id = 'dashboard/SET_DASHBOARD'
 
-export const setDashboard = ({ meta, countMeta, projectPath, tree, effect_path, effects }): Action<SetDashboardPayload> => ({
+export const setDashboard = (data: SetDashboardPayload): Action<SetDashboardPayload> => ({
   type: id,
   payload: {
-    // TODO: Add payload content
-    meta,
-    countMeta,
-    projectPath,
-    tree,
-    effect_path,
-    effects
+    meta: data.meta,
+    countMeta: data.countMeta,
+    projectPath: data.projectPath,
+    tree: data.tree,
+    effect_path: data.effect_path,
+    effects: data.effects
   }
 })
 

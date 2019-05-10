@@ -1,8 +1,18 @@
+// @flow
+
 import React from 'react'
 import { homeActions } from '../../state/home/actions'
 import { connect } from 'react-redux'
 
-class CreateProject extends React.Component {
+type State = {
+  projectName: string,
+}
+
+type Props = {
+  createProject: (name: string) => void,
+}
+
+class CreateProject extends React.Component<Props, State> {
   constructor(props) {
     super(props)
     this.state = {

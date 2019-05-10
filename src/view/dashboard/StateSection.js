@@ -1,10 +1,16 @@
+// @flow
+
 import React from 'react'
 import StateList from './StateList'
 import OpenModal from './OpenModal'
 import './StateSection.css'
 
-class StateSection extends React.Component {
-  constructor(props) {
+type State = {
+  isModalShow: boolean,
+}
+
+class StateSection extends React.Component<{}, State> {
+  constructor(props: {}) {
     super(props)
     this.state = {
       isModalShow: false,
