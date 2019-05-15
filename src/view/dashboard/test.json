@@ -1,0 +1,171 @@
+{
+  "nodes": [
+    {
+      "id": "hello",
+      "name": "hello",
+      "functionName": "readProjectEffect",
+      "effect": "take",
+      "type": "effect",
+      "params": [
+        "dashboardActions.setDashboard.id"
+      ],
+      "point_to": null,
+      "path": "/Users/peerasorn/Documents/code/test-parser/b.js"
+    },
+    {
+      "id": "dashboard/SET_DASHBOARD",
+      "name": "dashboard/SET_DASHBOARD",
+      "functionName": "readProjectEffect",
+      "effect": "take",
+      "type": "action",
+      "params": [
+        "dashboardActions.setDashboard.id"
+      ],
+      "point_to": "hello",
+      "path": "/Users/peerasorn/Documents/code/test-parser/b.js"
+    },
+    {
+      "id": "action2",
+      "name": "action2",
+      "functionName": "readProjectEffect",
+      "effect": "take",
+      "type": "effect",
+      "params": [
+        "dashboardActions.createProject.id"
+      ],
+      "point_to": null,
+      "path": "/Users/peerasorn/Documents/code/test-parser/b.js"
+    },
+    {
+      "id": "dashboard/CREATE_PROJECT",
+      "name": "dashboard/CREATE_PROJECT",
+      "functionName": "readProjectEffect",
+      "effect": "take",
+      "type": "action",
+      "params": [
+        "dashboardActions.createProject.id"
+      ],
+      "point_to": "action2",
+      "path": "/Users/peerasorn/Documents/code/test-parser/b.js"
+    },
+    {
+      "id": "hello1",
+      "name": "hello1",
+      "functionName": "readProjectEffect",
+      "effect": "call",
+      "type": "function",
+      "params": [
+        "mainProcess"
+      ],
+      "point_to": null,
+      "path": "/Users/peerasorn/Documents/code/test-parser/b.js"
+    },
+    {
+      "id": "hello2",
+      "name": "hello2",
+      "functionName": "readProjectEffect",
+      "effect": "call",
+      "type": "function",
+      "params": [
+        "mainProcess.createProject",
+        "projectName10",
+        "sas"
+      ],
+      "point_to": null,
+      "path": "/Users/peerasorn/Documents/code/test-parser/b.js"
+    },
+    {
+      "id": "mainProcess.createProject",
+      "name": "mainProcess.createProject",
+      "functionName": "readProjectEffect",
+      "effect": "call",
+      "type": "function",
+      "params": [
+        "mainProcess.createProject",
+        "projectName2"
+      ],
+      "point_to": null,
+      "path": "/Users/peerasorn/Documents/code/test-parser/b.js"
+    },
+    {
+      "id": "mainProcess.writeProject",
+      "name": "mainProcess.writeProject",
+      "functionName": "readProjectEffect",
+      "effect": "call",
+      "type": "function",
+      "params": [
+        "mainProcess.writeProject",
+        "projectName2",
+        "a"
+      ],
+      "point_to": null,
+      "path": "/Users/peerasorn/Documents/code/test-parser/b.js"
+    },
+    {
+      "id": "mainProcess.readProject",
+      "name": "mainProcess.readProject",
+      "functionName": "readProjectEffect",
+      "effect": "call",
+      "type": "function",
+      "params": [
+        "mainProcess.readProject"
+      ],
+      "point_to": null,
+      "path": "/Users/peerasorn/Documents/code/test-parser/b.js"
+    },
+    {
+      "id": "readProjectEffect",
+      "name": "readProjectEffect",
+      "functionName": "readProjectEffect",
+      "effect": "put",
+      "type": "effect",
+      "params": [
+        "dashboardActions.saveProfileSuccessMsg",
+        "data"
+      ],
+      "point_to": "dashboard/SAVE_PROFILE_SUCCESS_MSG",
+      "path": "/Users/peerasorn/Documents/code/test-parser/b.js"
+    },
+    {
+      "id": "dashboard/SET_DASHBOARD",
+      "name": "setDashboard",
+      "effect": null,
+      "type": "action",
+      "params": null,
+      "point_to": null,
+      "path": "/Users/peerasorn/Documents/code/test-parser/state/home/actions/index.js"
+    },
+    {
+      "id": "dashboard/CREATE_PROJECT",
+      "name": "createProject",
+      "effect": null,
+      "type": "action",
+      "params": null,
+      "point_to": null,
+      "path": "/Users/peerasorn/Documents/code/test-parser/state/home/actions/index.js"
+    },
+    {
+      "id": "dashboard/SAVE_PROFILE_SUCCESS_MSG",
+      "name": "saveProfileSuccessMsg",
+      "effect": null,
+      "type": "action",
+      "params": null,
+      "point_to": null,
+      "path": "/Users/peerasorn/Documents/code/test-parser/state/home/actions/index.js"
+    }
+  ],
+  "links": [
+    {
+      "source": "dashboard/SET_DASHBOARD",
+      "target": "hello"
+    },
+    {
+      "source": "dashboard/CREATE_PROJECT",
+      "target": "action2"
+    },
+    {
+      "source": "readProjectEffect",
+      "target": "dashboard/SAVE_PROFILE_SUCCESS_MSG"
+    }
+  ]
+}

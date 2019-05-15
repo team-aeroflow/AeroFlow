@@ -1,6 +1,7 @@
 // @flow
 
 import React from 'react'
+import Graph from './Graph'
 import './GraphSection.css'
 
 const electron = window.require('electron')
@@ -25,7 +26,7 @@ type nodeType = {
 type Props = {
   projectPath: string,
   button: Array<string>,
-  effects: Array<nodeType>,  
+  effects: Array<nodeType>,
   point_to: Array<linkType>,
 }
 
@@ -57,10 +58,13 @@ class GraphSection extends React.Component<Props> {
     }
 
     return (
-      <div>
+      <div className="graph-section"
+        style={{ width: '100%', overflow: 'auto' }}
+      >
         Dashboard
         <span style={{ display: 'block', fontSize: '14px' }}>PATH: {projectPath}</span>
-        {
+        <Graph />
+        {/* {
           effects.map((data, i) => {
             return (
               <div key={i} style={divStyles} onClick={this.onCodeClick.bind(this, data.path)}>
@@ -71,7 +75,7 @@ class GraphSection extends React.Component<Props> {
               </div>
             )
           })
-        }
+        } */}
       </div>
     )
   }

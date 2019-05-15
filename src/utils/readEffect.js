@@ -95,28 +95,56 @@ function ParserEffect(name) {
                 })
               }
             })
-            if (effect !== 'call') {
+            const name = typeId[0] === undefined ? params[0] : typeId[0]
+            const point_to = typeId[0] === undefined ? null : effect === 'take' ? effectFunction : typeId[0]
+            const isView = typeId[0] === 'router/NAVIGATE_TO' ? 'view' : 'effect'
+            const paramName = typeId[0] === undefined ? params[0] : typeId[0]
+
+            if (effect === 'take') {
               nodes.push({
-                id: varName,
-                name: varName,
+                id: effectFunction,
+                name: effectFunction,
                 functionName: effectFunction,
                 effect,
                 type: 'effect',
-                params: params.length === 0 ? null : params,
+                params: null,
+                point_to: paramName,
+                path: filePath
+              })
+            } else if (effect === 'put') {
+              nodes.push({
+                id: point_to,
+                name: point_to,
+                functionName: effectFunction,
+                effect: null,
+                type: 'action',
+                params: null,
                 point_to: null,
                 path: filePath
               })
+            } else if (effect === 'call') {
+              nodes.push({
+                id: effectFunction,
+                name: effectFunction,
+                functionName: effectFunction,
+                effect: null,
+                type: isView,
+                params: null,
+                point_to: paramName,
+                path: filePath
+              })
             }
-            const name = typeId[0] === undefined ? params[0] : typeId[0]
 
             nodes.push({
-              id: effect === 'take' ? name : effect === 'put' ? varName : varName,
-              name: effect === 'take' ? name : effect === 'put' ? varName : varName,
+              id: effect === 'call' ? paramName : effect === 'put' ? effectFunction : null,
+              name: effect === 'call' ? paramName : effect === 'put' ? effectFunction : null,
+              // id: effect === 'take' ? name : effect === 'put' ? varName : params[0],
+              // name: effect === 'take' ? name : effect === 'put' ? varName : params[0],
               functionName: effectFunction,
               effect,
               type,
               params: params.length === 0 ? null : params,
-              point_to: typeId[0] === undefined ? null : effect === 'take' ? varName : typeId[0],
+              point_to,
               path: filePath
             })
           })
@@ -156,15 +184,45 @@ function ParserEffect(name) {
               })
             }
           })
-          const name = typeId[0] === undefined ? params[0] : typeId[0]
+          const paramName = typeId[0] === undefined ? params[0] : typeId[0]
+          let point_to = typeId[0] === undefined ? null : effect === 'take' ? varName : typeId[0]
+          if (typeId[0] === 'router/NAVIGATE_TO') {
+            point_to = params[params.length - 1]
+          }
+          const isView = typeId[0] === 'router/NAVIGATE_TO' ? 'view' : effect === 'put' ? 'action' : effect === 'call' ? 'function' : 'effect'
+
+          if (effect === 'call') {
+            nodes.push({
+              id: effectFunction,
+              name: effectFunction,
+              functionName: effectFunction,
+              effect: null,
+              type: 'effect',
+              params: null,
+              point_to: paramName,
+              path: filePath
+            })
+          } else if (effect === 'put') {
+            nodes.push({
+              id: point_to,
+              name: point_to,
+              functionName: effectFunction,
+              effect: null,
+              type: isView,
+              params: null,
+              point_to: null,
+              path: filePath
+            })
+          }
+
           nodes.push({
-            id: effect === 'call' ? name : effect === 'put' ? effectFunction : null,
-            name: effect === 'call' ? name : effect === 'put' ? effectFunction : null,
+            id: effect === 'call' ? paramName : effect === 'put' ? effectFunction : null,
+            name: effect === 'call' ? paramName : effect === 'put' ? effectFunction : null,
             functionName: effectFunction,
             effect,
             type,
             params: params.length === 0 ? null : params,
-            point_to: typeId[0] === undefined ? null : effect === 'take' ? varName : typeId[0],
+            point_to,
             path: filePath
           })
         }
@@ -207,26 +265,45 @@ function ParserEffect(name) {
           }
         })
 
-        const name = typeId[0] === undefined ? params[0] : typeId[0]
+        const paramName = typeId[0] === undefined ? params[0] : typeId[0]
+        // let point_to = typeId[0] === undefined ? null : effect === 'take' ? effectFunction : typeId[0]
+        let point_to = effect === 'take' ? effectFunction : params[0]
+        if (point_to === 'router/NAVIGATE_TO') {
+          point_to = params[0]
+        }
+
         // init node
+        if (effect === 'take') {
+          nodes.push({
+            id: effectFunction,
+            name: effectFunction,
+            functionName: effectFunction,
+            effect: null,
+            type: 'effect',
+            params: null,
+            point_to: null,
+            path: filePath
+          })
+        } else if (effect === 'call') {
+          nodes.push({
+            id: params[0],
+            name: params[0],
+            functionName: effectFunction,
+            effect: null,
+            type: 'function',
+            params: null,
+            point_to: null,
+            path: filePath
+          })
+        }
         nodes.push({
-          id: varName,
-          name: varName,
-          functionName: effectFunction,
-          effect,
-          type: 'effect',
-          params: params.length === 0 ? null : params,
-          point_to: null,
-          path: filePath
-        })
-        nodes.push({
-          id: effect === 'take' ? name : effect === 'put' ? varName : varName,
-          name: effect === 'take' ? name : effect === 'put' ? varName : varName,
+          id: effect === 'take' ? paramName : effect === 'put' ? varName : effectFunction,
+          name: effect === 'take' ? paramName : effect === 'put' ? varName : effectFunction,
           functionName: effectFunction,
           effect,
           type,
           params: params.length === 0 ? null : params,
-          point_to: typeId[0] === undefined ? null : effect === 'take' ? varName : typeId[0],
+          point_to,
           path: filePath
         })
       })
@@ -277,16 +354,39 @@ function ParserEffect(name) {
             }
           })
         }
-        // console.log(params)
-        // console.log(typeId)
-        const name = typeId[0] === undefined ? params[0] : typeId[0]
+        const paramName = typeId[0] === undefined ? params[0] : typeId[0]
         let point_to = typeId[0] === undefined ? null : effect === 'take' ? varName : typeId[0]
-        if (point_to === 'router/NAVIGATE_TO') {
+        if (typeId[0] === 'router/NAVIGATE_TO') {
           point_to = params[0]
         }
+        const isView = typeId[0] === 'router/NAVIGATE_TO' ? 'view' : effect === 'put' ? 'action' : effect === 'call' ? 'function' : 'effect'
+        console.log('390', effect)
+        if (effect === 'put') {
+          nodes.push({
+            id: point_to,
+            name: point_to,
+            functionName: effectFunction,
+            effect: null,
+            type: isView,
+            params: null,
+            point_to: null,
+            path: filePath
+          })
+        } else if (effect === 'call') {
+          nodes.push({
+            id: effectFunction,
+            name: effectFunction,
+            functionName: effectFunction,
+            effect: null,
+            type: isView,
+            params: null,
+            point_to: paramName,
+            path: filePath
+          })
+        }
         nodes.push({
-          id: effect === 'call' ? name : effect === 'put' ? effectFunction : null,
-          name: effect === 'call' ? name : effect === 'put' ? effectFunction : null,
+          id: effect === 'call' ? paramName : effect === 'put' ? effectFunction : null,
+          name: effect === 'call' ? paramName : effect === 'put' ? effectFunction : null,
           functionName: effectFunction,
           effect,
           type,

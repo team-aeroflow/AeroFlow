@@ -17,7 +17,7 @@ class Root extends Component {
 
   render() {
     return (
-      <div className="Root App-header">
+      <div className="App-header">
         <RouteNode nodeName="">
           {(context) => this.renderChild(context.route)}
         </RouteNode>
