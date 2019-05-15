@@ -107,8 +107,7 @@ ipcMain.once('watch-file', (event, arg) => {
     n.actions = actionPath
     utils.collectEffect(n)
 
-    // console.log('117', utils.meta)
-    console.log(103103)
+    console.log(110, utils.meta)
     event.sender.send('watch-file-response', {
       meta,
       countMeta,
@@ -170,6 +169,7 @@ ipcMain.on('create-project', (event, arg) => {
     n.effects = effectPath
     n.actions = actionPath
     utils.collectEffect(n)
+    console.log(173, n)
     // effectPath.map((name) => {
     //   utils.collectEffect(path.resolve(name))
     // })
@@ -222,7 +222,7 @@ ipcMain.on('open-project', (event, arg) => {
   n.actions = actionPath
 
   utils.collectEffect(n)
-
+  console.log(226, utils.meta)
   // TODO: FIX BUG : effects: utils.meta
   event.sender.send('open-project-response', {
     success: true
