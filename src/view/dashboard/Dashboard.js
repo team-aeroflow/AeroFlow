@@ -99,6 +99,8 @@ class Dashboard extends React.Component<Props, State> {
           button={button}
           effects={effects}
           point_to={point_to}
+
+          graph={this.props.effects}
         />
       </div>
     )

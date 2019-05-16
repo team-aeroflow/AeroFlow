@@ -1,5 +1,6 @@
 import React from 'react'
 import * as d3 from 'd3'
+import { connect } from 'react-redux'
 
 const graph = require('./test.json')
 let link, node, lables, circle, simulation;
@@ -18,13 +19,28 @@ class Graph extends React.Component {
       },
       width: 800,
       height: 700,
+      graph: {}
     }
   }
 
-  componentDidMount() {
+  static getDerivedStateFromProps(props, state) {
+    const { graph } = props
+    if (state !== props && graph !== undefined) {
+      return {
+        ...state,
+        graph
+      }
+    } else {
+      return state
+    }
+  }
+
+  componentDidUpdate() {
     this.init()
     this.initSimulation()
     this.countEffect()
+    // console.log(this.state)
+    const { graph } = this.state
     this.updateLink(graph.links)
     this.updateNode(graph.nodes)
 
@@ -47,6 +63,7 @@ class Graph extends React.Component {
           return "translate(" + d.x + "," + d.y + ")";
         })
     }
+    
   }
 
   init() {
@@ -136,7 +153,7 @@ class Graph extends React.Component {
       .call(d3.drag()
         .on("start", this.dragstarted)
         .on("drag", this.dragged)
-        .on("end", this.dragended));
+        .on("end", this.dragended))
 
     lables = node.append("text")
       .text(function (d) {
@@ -147,10 +164,12 @@ class Graph extends React.Component {
       .call(d3.drag()
         .on("start", this.dragstarted)
         .on("drag", this.dragged)
-        .on("end", this.dragended));
+        .on("end", this.dragended))
 
     node.append("title")
-      .text(function (d) { return d.id; });
+      .text(function (d) { return d.id; })
+
+      
   }
 
   dragstarted(d) {
@@ -171,10 +190,26 @@ class Graph extends React.Component {
   }
 
   render() {
+    const { graph } = this.props
+    // console.log(graph)
+    console.log(this.state.graph)
     return (
       <div></div>
     )
   }
 }
 
-export default Graph
+function mapStateToProps(state) {
+  const { effects } = state.dashboard
+  return {
+    effects,
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+
+  }
+}
+
+export default connect(mapDispatchToProps, mapDispatchToProps)(Graph)

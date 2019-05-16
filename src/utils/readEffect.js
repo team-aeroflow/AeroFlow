@@ -1,6 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 const flow = require('flow-parser')
+const _ = require('lodash')
 
 const meta = {}
 const nodes = []
@@ -29,6 +30,20 @@ function clearMeta() {
   }
   nodes.length = 0
   links.length = 0
+}
+
+function reduceSameID(data) {
+  const result = _(data)
+    .groupBy('id')
+    .map(g => _.mergeWith({}, ...g, (o, s, k) => {
+      if (k !== 'point_to') return
+
+      if (_.isNil(s)) return o
+
+      return [].concat(o || [], s)
+    }))
+    .value()
+  return result
 }
 
 function ParserEffect(name) {
@@ -159,7 +174,7 @@ function ParserEffect(name) {
             return
           }
           const effect = body.expression.argument.callee.name
-          const type = effect === 'call' ? 'function' : 'action'
+          const type = effect === 'call' ? 'function' : 'effect'
 
           const params = []
           const typeId = []
@@ -365,7 +380,7 @@ function ParserEffect(name) {
           point_to = params[0]
         }
         const isView = typeId[0] === 'router/NAVIGATE_TO' ? 'view' : effect === 'put' ? 'action' : effect === 'call' ? 'function' : 'effect'
-        console.log('390', effect)
+
         if (effect === 'put') {
           nodes.push({
             id: point_to,
@@ -418,8 +433,9 @@ function createMetaObject() {
       target: node.point_to
     })
   })
-  console.log(416, links)
+
   meta.links = links
+  meta.nodes = reduceSameID(meta.nodes)
 }
 
 function ParserAction(file) {
@@ -447,10 +463,10 @@ function ParserAction(file) {
 function collectEffect(name) {
   const { effects, actions } = name
   clearMeta()
-  effects.map(d => {
+  effects.forEach(d => {
     ParserEffect(d)
   })
-  actions.map(d => {
+  actions.forEach(d => {
     ParserAction(d)
   })
   createMetaObject()

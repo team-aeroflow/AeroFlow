@@ -25,7 +25,7 @@ class Home extends React.Component<Props, State> {
 
   componentDidMount() {
     // อย่าลืมเอาออก
-    // this.props.openProject()
+    this.props.openProject()
 
     document.addEventListener('keydown', this.keydownHandler.bind(this), false)
   }

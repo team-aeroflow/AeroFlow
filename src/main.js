@@ -190,8 +190,8 @@ ipcMain.on('create-project', (event, arg) => {
 })
 
 ipcMain.on('open-project', (event, arg) => {
-  const getPath = this.openProject()
-  // const getPath = '/Users/peerasorn/Desktop/finalproject'
+  // const getPath = this.openProject()
+  const getPath = '/Users/peerasorn/Desktop/finalproject'
   const tree = handleFile.getFileList(getPath)
   const metaPath = `${getPath}/src/state/__state__/`
   if (tree === undefined || !fs.existsSync(metaPath)) {

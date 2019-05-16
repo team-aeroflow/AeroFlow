@@ -28,6 +28,7 @@ type Props = {
   button: Array<string>,
   effects: Array<nodeType>,
   point_to: Array<linkType>,
+  graph: Object,
 }
 
 class GraphSection extends React.Component<Props> {
@@ -46,16 +47,9 @@ class GraphSection extends React.Component<Props> {
       projectPath,
       button,
       effects,
-      point_to
+      point_to,
+      graph
     } = this.props
-
-    const divStyles = {
-      color: 'black',
-      margin: 10,
-      backgroundColor: 'blue',
-      borderRadius: 10,
-      cursor: 'pointer',
-    }
 
     return (
       <div className="graph-section"
@@ -63,7 +57,7 @@ class GraphSection extends React.Component<Props> {
       >
         Dashboard
         <span style={{ display: 'block', fontSize: '14px' }}>PATH: {projectPath}</span>
-        <Graph />
+        <Graph graph={graph} />
         {/* {
           effects.map((data, i) => {
             return (
