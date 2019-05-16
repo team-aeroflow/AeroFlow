@@ -45,6 +45,10 @@ exports.createProject = (name) => {
   })
 }
 
+/**
+ * Creates a new State.
+ * @param {Object} arg is StateName and ProjectPath.
+ */
 ipcMain.on('create-state', (event, arg) => {
   const process = fork(`${__dirname}/utils/createState.js`)
   process.send({

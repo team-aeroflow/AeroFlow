@@ -7,11 +7,12 @@ export type CreateStatePayload = {
 
 const id = 'dashboard/CREATE_STATE'
 
-export const createState = (name: string): Action<CreateStatePayload> => ({
+export const createState = (name: string, projectPath: string): Action<CreateStatePayload> => ({
   type: id,
   payload: {
     // TODO: Add payload content
     name,
+    projectPath,
   }
 })
 

@@ -1,6 +1,6 @@
 // @flow
 
-import type {Effect} from '../../types'
+import type { Effect } from '../../types'
 import { dashboardActions } from '../actions'
 import {
   take,
@@ -10,9 +10,10 @@ const ipcRenderer = electron.ipcRenderer
 
 export function* createStateEffect(): Effect {
   // TODO: put your effect logic here
-  while(true) {
+  while (true) {
     const action = yield take(dashboardActions.createState.id)
-    const { name } = action.payload
-    ipcRenderer.send('create-state', name)
+    // const { name, projectPath } = action.payload
+    const { payload } = action
+    ipcRenderer.send('create-state', payload)
   }
 }

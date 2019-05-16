@@ -9,20 +9,34 @@ import './OpenModal.css'
 
 type State = {
   name: string,
+  projectPath: string,
 }
 
 type Props = {
   isModalShow: boolean,
   handleClose: boolean,
   handleClose: () => void,
-  createState: (name: string) => void,
+  createState: (name: string, projectPath: string) => void,
 }
 
 class OpenModal extends React.Component<Props, State> {
   constructor(props) {
     super(props)
     this.state = {
-      name: ''
+      name: '',
+      projectPath: ''
+    }
+  }
+
+  static getDerivedStateFromProps(props, state) {
+    const { projectPath } = props
+    if (state !== props && projectPath !== undefined) {
+      return {
+        ...state,
+        projectPath
+      }
+    } else {
+      return state
     }
   }
 
@@ -33,10 +47,10 @@ class OpenModal extends React.Component<Props, State> {
   }
 
   submitName() {
-    const { name } = this.state
+    const { name, projectPath } = this.state
     const { createState, handleClose } = this.props
     handleClose()
-    createState(name)
+    createState(name, projectPath)
   }
 
 
@@ -45,7 +59,7 @@ class OpenModal extends React.Component<Props, State> {
       isModalShow,
       handleClose,
     } = this.props
-
+    console.log(this.state)
     return (
       <div className="modal-block">
         <Modal show={isModalShow}
@@ -83,15 +97,16 @@ class OpenModal extends React.Component<Props, State> {
 }
 
 function mapStateToProps(state) {
+  const { projectPath } = state.dashboard
   return {
-
+    projectPath,
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    createState: (name) => {
-      dispatch(dashboardActions.createState(name))
+    createState: (name, projectPath) => {
+      dispatch(dashboardActions.createState(name, projectPath))
     }
   }
 }

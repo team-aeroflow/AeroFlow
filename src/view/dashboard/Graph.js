@@ -63,7 +63,6 @@ class Graph extends React.Component {
           return "translate(" + d.x + "," + d.y + ")";
         })
     }
-    
   }
 
   init() {
