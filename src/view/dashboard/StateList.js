@@ -72,33 +72,41 @@ class StateList extends React.Component<Props, State>{
         {
           countMeta !== undefined && Object.keys(countMeta).map((key, i) => {
             return (
-              <div key={i} className="state-block" onClick={this.toggle.bind(this, key)}>
-                <h3>
-                  State : {key}
-                </h3>
+              <div key={i} className="state-block" >
+                <div className="state-name-block" onClick={this.toggle.bind(this, key)}>
+                  <span>State: {key}</span>
+                  <span >
+                    {keyToClose[key] ? '-' : '+'}
+                  </span>
+                </div>
+
                 {
                   (keyToClose[key]) ?
                     (
-                      <div>
+                      <div className="state-block-info">
                         <p>
                           <span className="dot" id="dot-action"></span>
-                          Actions {countMeta[key].actions}
+                          <span className="type">Actions </span>
+                          <span className="count">{countMeta[key].actions}</span>
                         </p>
                         <p>
                           <span className="dot" id="dot-channel"></span>
-                          Channels {countMeta[key].channels}
+                          <span className="type">Channels </span>
+                          <span className="count">{countMeta[key].channels}</span>
                         </p>
                         <p>
                           <span className="dot" id="dot-effect"></span>
-                          Effects {countMeta[key].effects}
+                          <span className="type">Effects </span>
+                          <span className="count">{countMeta[key].effects}</span>
                         </p>
                         <p>
                           <span className="dot" id="dot-reducer"></span>
-                          Reducers {countMeta[key].reducers}
+                          <span className="type">Reducers </span>
+                          <span className="count">{countMeta[key].reducers}</span>
                         </p>
                       </div>
                     )
-                  : null
+                    : null
                 }
               </div>
             )

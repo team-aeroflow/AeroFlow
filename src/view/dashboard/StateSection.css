@@ -16,7 +16,6 @@
   /* display: fixed; */
   background-color: red;
   text-align: center;
-
 }
 
 .add-state-block #add-state {
@@ -34,12 +33,53 @@
   background-color: rgb(202, 102, 102);
 }
 
+.state-block .state-name-block {
+  cursor: pointer;
+  display: flex;
+  font-weight: bold;
+}
+
+.state-block .state-name-block span:first-of-type {
+  flex: 1;
+}
+
+/* 
+.state-block .state-name-block span:nth-of-type(2) {
+  font-weight: bold
+} */
+
 .state-block .dot {
   height: 25px;
   width: 25px;
   background-color: #bbb;
   border-radius: 50%;
   display: inline-block;
+}
+
+.state-block .state-block-info {
+  padding-top: 10px;
+}
+
+.state-block .state-block-info p {
+  margin: 0px;
+  clear: both;
+  justify-content: space-between;
+}
+
+.state-block .state-block-info span {
+  margin-right: 10px;
+}
+
+.state-block .state-block-info p .count{
+  width: 25px;
+  float: right;
+  padding: 5px;
+  font-size: 15px;
+  margin-top: 0.6vh;
+  border-radius: 5px;
+  text-align: center;
+  color: black;
+  background-color: white;
 }
 
 #dot-action {
