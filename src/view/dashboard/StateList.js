@@ -1,6 +1,7 @@
 // @flow
 import React from 'react'
 import { connect } from 'react-redux'
+import './StateList.css'
 
 type State = {
   keyToClose: Object,
@@ -33,16 +34,10 @@ class StateList extends React.Component<Props, State>{
   }
   // static getDerivedStateFromProps(props, state) {
   //   const { countMeta } = props
-  //   const keyToClose = {}
-  //   console.log(1)
   //   if (state !== props && countMeta !== undefined) {
-  //     Object.keys(countMeta).map(meta => {
-  //       keyToClose[meta] = true
-  //     })
-  //     // const keyToClose = Object.keys(countMeta).fill(1)
   //     return {
   //       ...state,
-  //       keyToClose
+  //       countMeta
   //     }
   //   } else {
   //     return state
@@ -66,7 +61,7 @@ class StateList extends React.Component<Props, State>{
   render() {
     const { keyToClose } = this.state
     const { countMeta } = this.props
-
+    console.log(countMeta)
     return (
       <div>
         {

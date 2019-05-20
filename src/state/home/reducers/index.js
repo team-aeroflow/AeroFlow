@@ -7,12 +7,15 @@ import type {Action} from '../../types'
 import type {HomeState} from '../types'
 
 import {openProjectReducer} from './openProject'
+import {checkIsProjectReducer} from './checkIsProject'
 import {initialState} from './initialState'
 
 export const homeReducer = (state: HomeState = initialState, action: Action<any>): HomeState => {
   switch (action.type) {
     case 'home/OPEN_PROJECT':
       return openProjectReducer(state, action)
+    case 'home/CHECK_IS_PROJECT':
+      return checkIsProjectReducer(state, action)
     default:
       return state
   }

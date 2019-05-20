@@ -114,7 +114,8 @@ function ParserEffect(name) {
             // const point_to = typeId[0] === undefined ? null : effect === 'take' ? effectFunction : typeId[0]
             const isView = typeId[0] === 'router/NAVIGATE_TO' ? 'view' : 'effect'
             const paramName = typeId[0] === undefined ? params[0] : typeId[0]
-            let point_to = effect === 'take' ? effectFunction : params[0]
+            // let point_to = effect === 'take' ? effectFunction : params[0]
+            let point_to = effect === 'take' ? effectFunction : effect === 'call' ? null : params[0]
             if (point_to === 'router/NAVIGATE_TO') {
               point_to = params[0]
             }
@@ -155,9 +156,8 @@ function ParserEffect(name) {
             }
 
             nodes.push({
-              id: effect === 'take' ? paramName : effect === 'put' ? varName : effectFunction,
-              name: effect === 'take' ? paramName : effect === 'put' ? varName : effectFunction,
-
+              id: effect === 'take' ? paramName : effect === 'put' ? varName : effect === 'call' ? paramName : null,
+              name: effect === 'take' ? paramName : effect === 'put' ? varName : effect === 'call' ? paramName : null,
               // id: effect === 'take' ? name : effect === 'put' ? varName : params[0],
               // name: effect === 'take' ? name : effect === 'put' ? varName : params[0],
               functionName: effectFunction,

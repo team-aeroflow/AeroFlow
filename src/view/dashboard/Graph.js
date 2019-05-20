@@ -36,6 +36,7 @@ class Graph extends React.Component {
   }
 
   componentDidUpdate() {
+    this.clearGraph()
     this.init()
     this.initSimulation()
     this.countEffect()
@@ -63,6 +64,10 @@ class Graph extends React.Component {
           return "translate(" + d.x + "," + d.y + ")";
         })
     }
+  }
+
+  clearGraph() {
+    d3.selectAll("svg > *").remove()
   }
 
   init() {
@@ -148,27 +153,33 @@ class Graph extends React.Component {
 
     circle = node.append("circle")
       .attr("r", 20)
+      .attr("stroke", "black")
+      .attr("stroke-width", 3)
       .attr("fill", function (d) { return colorScale[type[d.type]] })
       .call(d3.drag()
         .on("start", this.dragstarted)
         .on("drag", this.dragged)
         .on("end", this.dragended))
 
-    lables = node.append("text")
+
+    node.append("text")
       .text(function (d) {
         return d.name;
       })
-      .attr('x', 6)
-      .attr('y', 3)
+      .attr("x", function (d) { return d.x })
+      .attr("y", '50')
+      .attr('font-size', 20)
+      .attr('text-anchor', 'middle')
+      .attr('background-color', 'blue')
       .call(d3.drag()
         .on("start", this.dragstarted)
         .on("drag", this.dragged)
         .on("end", this.dragended))
 
-    node.append("title")
-      .text(function (d) { return d.id; })
+    node.append('rect')
 
-      
+    node.append("title")
+    .text(function (d) { return d.id; })
   }
 
   dragstarted(d) {

@@ -5,8 +5,10 @@
 
 import {openProject} from './openProject'
 import {createProject} from './createProject'
+import {checkIsProject} from './checkIsProject'
 
 export const homeActions = {
   openProject,
   createProject,
+  checkIsProject,
 }

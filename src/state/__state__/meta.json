@@ -14,6 +14,12 @@
           "name": "createProject",
           "flowType": "CreateProject",
           "id": "home/CREATE_PROJECT"
+        },
+        "checkIsProject": {
+          "name": "checkIsProject",
+          "flowType": "CheckIsProject",
+          "id": "home/CHECK_IS_PROJECT",
+          "reducer": true
         }
       },
       "channels": {},

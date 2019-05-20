@@ -77,9 +77,9 @@ ipcMain.once('watch-file', (event, arg) => {
     const metaPath = `${p}/src/state/__state__/`
     const meta = handleFile.readFileFromUser(metaPath, 'meta.json')
     const countMeta = readMeta.countProperty(meta)
-    // console.log(68, countMeta)
+    // console.log(80, countMeta)
     const tree = handleFile.getFileList(p)
-    console.log(evt, name)
+    // console.log(evt, name)
 
     let code = ''
     if (fs.existsSync(name)) {
@@ -111,7 +111,7 @@ ipcMain.once('watch-file', (event, arg) => {
     n.actions = actionPath
     utils.collectEffect(n)
 
-    console.log(110, utils.meta)
+    console.log(114, utils.meta)
     event.sender.send('watch-file-response', {
       meta,
       countMeta,
@@ -194,8 +194,8 @@ ipcMain.on('create-project', (event, arg) => {
 })
 
 ipcMain.on('open-project', (event, arg) => {
-  // const getPath = this.openProject()
-  const getPath = '/Users/peerasorn/Desktop/finalproject'
+  const getPath = this.openProject()
+  // const getPath = '/Users/peerasorn/Desktop/finalproject'
   const tree = handleFile.getFileList(getPath)
   const metaPath = `${getPath}/src/state/__state__/`
   if (tree === undefined || !fs.existsSync(metaPath)) {
@@ -226,7 +226,8 @@ ipcMain.on('open-project', (event, arg) => {
   n.actions = actionPath
 
   utils.collectEffect(n)
-  console.log(226, utils.meta)
+  console.log(229, utils.meta)
+  console.log(230, JSON.stringify(utils.meta))
   // TODO: FIX BUG : effects: utils.meta
   event.sender.send('open-project-response', {
     success: true

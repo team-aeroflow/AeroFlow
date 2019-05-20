@@ -11,6 +11,7 @@ type State = {
 }
 
 type Props = {
+  status: Object,
   openProject: () => void,
 }
 
@@ -25,7 +26,7 @@ class Home extends React.Component<Props, State> {
 
   componentDidMount() {
     // อย่าลืมเอาออก
-    this.props.openProject()
+    // this.props.openProject()
 
     document.addEventListener('keydown', this.keydownHandler.bind(this), false)
   }
@@ -56,21 +57,24 @@ class Home extends React.Component<Props, State> {
 
   render() {
     const { showDialog, isProject } = this.state
+    const { success } = this.props.status
+
     return (
       <div>
         <button onClick={this.isOpenNewProject.bind(this)}>New Project</button>
         {showDialog ? <CreateProject /> : null}
         <div>__________</div>
-        {!isProject ? "This project not support" : null}
+        {!success ? "This project not support" : null}
         <button onClick={this.onOpenExistProjectClick.bind(this)}>Open Existing...</button>
       </div>
     )
   }
 }
 
-function mapStateToProps(staet) {
+function mapStateToProps(state) {
+  const { status } = state.home
   return {
-
+    status,
   }
 }
 
