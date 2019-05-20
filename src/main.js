@@ -227,7 +227,7 @@ ipcMain.on('open-project', (event, arg) => {
 
   utils.collectEffect(n)
   console.log(229, utils.meta)
-  console.log(230, JSON.stringify(utils.meta))
+  // console.log(230, JSON.stringify(utils.meta))
   // TODO: FIX BUG : effects: utils.meta
   event.sender.send('open-project-response', {
     success: true

@@ -36,6 +36,7 @@ type State = {
 
 type Props = {
   setDashboard: (payload: any) => void,
+  effects: Object,
 }
 
 class Dashboard extends React.Component<Props, State> {

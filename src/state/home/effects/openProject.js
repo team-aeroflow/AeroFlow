@@ -36,11 +36,11 @@ async function checkIsProject() {
 export function* openProjectEffect(): Effect {
   while (true) {
     const action = yield take(homeActions.openProject.id)
-    console.log(1)
-    console.log(action)
+    // console.log(1)
+    // console.log(action)
     ipcRenderer.send('open-project', 'open project')
     const isProject = yield call(checkIsProject)
-    console.log(42, isProject)
+    // console.log(42, isProject)
     yield put(homeActions.checkIsProject(isProject))
     // ipcRenderer.on('open-project-response', (event, arg) => {
     //   const { success } = arg
