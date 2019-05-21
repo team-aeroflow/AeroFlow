@@ -1,63 +1,38 @@
-// // @flow 
+// @flow 
 
-// import React from 'react'
-// import SweetAlert from 'sweetalert2-react'
+import React from 'react'
+import SweetAlert from 'sweetalert2-react'
 
-// type State = {
-//   show: boolean
-// }
+type Props = {
+  alert: boolean,
+  onOpen: () => void,
+  onConfirm: () => void,
+}
 
-// type Props = {
-//   show: boolean
-// }
+class AlertBox extends React.Component<Props, {}> {
 
-// class AlertBox extends React.Component<Props, State> {
-//   // constructor(props: {}) {
-//   //   super(props)
-//   //   this.state = {
-//   //     show: true,
-//   //   }
-//   // }
+  componentDidUpdate(prevProps: Props, prevState: {}) {
+    console.log(prevProps, prevState)
+    const { onOpen } = prevProps
+    if(!prevProps.alert) {
+      onOpen()
+    }
+  }
 
-//   // static getDerivedStateFromProps(props, state) {
-//   //    return {
-//   //      show: true
-//   //    }
-//   //  }
-//   componentDidUpdate(prevProps, prevState) {
-//     console.log(prevProps, prevState)
-//     const { onOpen } = prevProps
-//     if(!prevProps.show) {
-//       onOpen()
-//     }
-//     // if (!prevState.length) {
-//     //   this.setState({ projects: this.state.projects })
-//     // }
-//   }
-//   // handleClose() {
-//   //   this.setState({ show: false })
-//   // }
+  render() {
+    const { alert, onConfirm } = this.props
 
-//   // handleShow() {
-//   //   this.setState({ show: true })
-//   // }
+    return (
+      <div>
+        <SweetAlert
+          show={alert}
+          title="Oh my god!"
+          text="Please choose project or This project is not supported :("
+          onConfirm={onConfirm}
+        />
+      </div>
+    )
+  }
+}
 
-//   render() {
-//     const { show, onConfirm, onOpen } = this.props
-//     // console.log(show)
-//     return (
-//       <div>
-//         {/* <button onClick={() => this.setState({ show: true })}>Alert</button> */}
-//         <SweetAlert
-//           show={show}
-//           title="Demo"
-//           text="SweetAlert in React"
-//           // onConfirm={() => this.setState({ show: false })}
-//           onConfirm={onConfirm}
-//         />
-//       </div>
-//     );
-//   }
-// }
-
-// export default AlertBox
+export default AlertBox

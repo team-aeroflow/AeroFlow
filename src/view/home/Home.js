@@ -4,10 +4,14 @@ import './Home.css'
 import CreateProject from './CreateProject'
 import { connect } from 'react-redux'
 import { homeActions } from '../../state/home/actions'
+// import SweetAlert from 'sweetalert2-react'
+import AlertBox from './AlertBox'
 
 type State = {
   showDialog: boolean,
   isProject: boolean,
+  alert: boolean,
+  showCreateProject: boolean,
 }
 
 type Props = {
@@ -21,6 +25,8 @@ class Home extends React.Component<Props, State> {
     this.state = {
       showDialog: false,
       isProject: true,
+      alert: true,
+      showCreateProject: false,
     }
   }
 
@@ -55,16 +61,49 @@ class Home extends React.Component<Props, State> {
     this.props.openProject()
   }
 
+  onOpen() {
+    this.setState({
+      alert: true
+    })
+  }
+
+  onConfirm() {
+    this.setState({
+      alert: false,
+    })
+  }
+
+  handleShow() {
+    this.setState({
+      showCreateProject: true
+    })
+  }
+
+  handleClose() {
+    this.setState({
+      showCreateProject: false
+    })
+  }
+
   render() {
-    const { showDialog, isProject } = this.state
+    const { showDialog, isProject, alert, showCreateProject } = this.state
     const { success } = this.props.status
 
     return (
       <div>
-        <button onClick={this.isOpenNewProject.bind(this)}>New Project</button>
-        {showDialog ? <CreateProject /> : null}
+        <button onClick={this.handleShow.bind(this)}>New Project</button>
+        {showCreateProject ?
+          <CreateProject handleClose={this.handleClose.bind(this)}
+            show={showCreateProject}
+          />
+          : null}
         <div>__________</div>
-        {!success ? "This project not support" : null}
+        {!success ?
+          <AlertBox onOpen={this.onOpen.bind(this)}
+            onConfirm={this.onConfirm.bind(this)}
+            alert={alert}
+          />
+          : null}
         <button onClick={this.onOpenExistProjectClick.bind(this)}>Open Existing...</button>
       </div>
     )
