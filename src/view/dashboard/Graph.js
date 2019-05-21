@@ -121,15 +121,6 @@ class Graph extends React.Component {
     const sum_function = graph.nodes.filter((i) => {
       return i.type === 'function'
     })
-
-    const div_count = d3.select('body')
-      .append('div')
-    div_count.append('h2')
-      .text(`Action: ${sum_action.length}`)
-    div_count.append('h2')
-      .text(`Effect: ${sum_effect.length}`)
-    div_count.append('h2')
-      .text(`Function: ${sum_function.length}`)
   }
 
   updateLink(links) {

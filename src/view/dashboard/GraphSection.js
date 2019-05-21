@@ -55,7 +55,7 @@ class GraphSection extends React.Component<Props> {
       <div className="graph-section"
         style={{ width: '100%', overflow: 'auto' }}
       >
-        Dashboard
+        {"Project Name"}
         <span style={{ display: 'block', fontSize: '14px' }}>PATH: {projectPath}</span>
         <Graph graph={graph} />
         {/* {
