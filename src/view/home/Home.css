@@ -18,3 +18,50 @@ button {
   border: 1px solid red;
   border-radius: 5%;
 } */
+.home {
+  padding: 10%;
+  background-color: #636363;
+  border-radius: 20px;
+  /* width: 100%; */
+  /* height: 100%; */
+  /* display: block; */
+}
+
+.home #span-head {
+  /* display: block; */
+  display: inline-block;
+
+  font-size: 4rem;
+  font-weight: bold;
+  margin: auto 20px 20px 20px;
+  -webkit-text-stroke: 2px #282c34;
+}
+
+.home #span-head:first-letter {
+  color: #2490d8;
+}
+
+.home .home-block {
+  text-align:center;
+  display: block;
+}
+
+hr.line {
+  border: 2px solid white;
+  /* border-radius: 5px; */
+}
+
+#create-project, #open-project {
+  border-radius: 10px;
+  padding: 15px;
+}
+
+#create-project:hover {
+  color: white;
+  background-color: rgb(56, 170, 56);
+}
+
+#open-project:hover {
+  color: white;
+  background-color: #dd940b;
+}

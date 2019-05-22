@@ -1,11 +1,10 @@
 // @flow
 import React from 'react'
-import './Home.css'
-import CreateProject from './CreateProject'
 import { connect } from 'react-redux'
 import { homeActions } from '../../state/home/actions'
-// import SweetAlert from 'sweetalert2-react'
+import CreateProject from './CreateProject'
 import AlertBox from './AlertBox'
+import './Home.css'
 
 type State = {
   showDialog: boolean,
@@ -32,7 +31,7 @@ class Home extends React.Component<Props, State> {
 
   componentDidMount() {
     // อย่าลืมเอาออก
-    this.props.openProject()
+    // this.props.openProject()
 
     document.addEventListener('keydown', this.keydownHandler.bind(this), false)
   }
@@ -90,21 +89,33 @@ class Home extends React.Component<Props, State> {
     const { success } = this.props.status
 
     return (
-      <div>
-        <button onClick={this.handleShow.bind(this)}>New Project</button>
-        {showCreateProject ?
-          <CreateProject handleClose={this.handleClose.bind(this)}
-            show={showCreateProject}
-          />
-          : null}
-        <div>__________</div>
-        {!success ?
-          <AlertBox onOpen={this.onOpen.bind(this)}
-            onConfirm={this.onConfirm.bind(this)}
-            alert={alert}
-          />
-          : null}
-        <button onClick={this.onOpenExistProjectClick.bind(this)}>Open Existing...</button>
+      <div className="home">
+        <span id="span-head">Aero Flow</span>
+        <div className="home-block">
+          <button id="create-project"
+            onClick={this.handleShow.bind(this)}
+          >
+            New Project
+        </button>
+          {showCreateProject ?
+            <CreateProject handleClose={this.handleClose.bind(this)}
+              show={showCreateProject}
+            />
+            : null}
+          {/* <div></div> */}
+            <hr className="line"></hr>
+          {!success ?
+            <AlertBox onOpen={this.onOpen.bind(this)}
+              onConfirm={this.onConfirm.bind(this)}
+              alert={alert}
+            />
+            : null}
+          <button id="open-project"
+            onClick={this.onOpenExistProjectClick.bind(this)}
+          >
+            Open Existing...
+        </button>
+        </div>
       </div>
     )
   }
